@@ -1,4 +1,4 @@
-export interface CatWeight {
+export interface ICatWeight {
   imperial: string;
   metric: string;
 }

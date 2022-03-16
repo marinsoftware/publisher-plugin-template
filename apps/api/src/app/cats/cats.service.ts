@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CatsJson } from './mock/cats-json';
-import { CreateCatDto } from './dto/create-cat.dto';
-import { UpdateCatDto } from './dto/update-cat.dto';
+import { CreateCatDto } from './models/create-cat.dto';
+import { UpdateCatDto } from './models/update-cat.dto';
 import { Cat } from './entities/cat.entity';
 
 @Injectable()

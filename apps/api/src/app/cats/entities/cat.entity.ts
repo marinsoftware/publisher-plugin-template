@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {  CatBreedI } from '../interfaces/cat-breeds.interface';
-import { CatI } from '../interfaces/cat.interface';
-import { Category } from '../interfaces/category.interface';
+import { ICategory } from '../models/category.interface';
+import { ICat } from '../models/cat.interface';
 import { CatBreed } from './cat-breed.entity';
+import { ICatBreed } from '../models/cat-breeds.interface';
 
-export class Cat implements CatI {
+export class Cat implements ICat {
   @ApiProperty({
     type: CatBreed,
     description: 'The breed of the Cat',
     isArray: true,
   })
-  breeds?: CatBreedI[];
+  breeds?: ICatBreed[];
   @ApiProperty({
     example: [{ id: 5, name: 'boxes' }],
     description: 'The category of the cat',
   })
-  categories?: Category[];
+  categories?: ICategory[];
   @ApiProperty({ example: '12343', description: 'The cat id' })
   id: string;
   @ApiProperty({

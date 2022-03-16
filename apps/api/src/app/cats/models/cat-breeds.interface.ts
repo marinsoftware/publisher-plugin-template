@@ -1,7 +1,7 @@
-import { CatWeight } from './cat-weight.interface';
+import { ICatWeight } from './cat-weight.interface';
 
-export interface CatBreedI {
-  weight: CatWeight;
+export interface ICatBreed {
+  weight: ICatWeight;
   id: string;
   name: string;
   cfa_url: string;

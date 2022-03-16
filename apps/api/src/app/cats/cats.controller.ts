@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { lastValueFrom, map, Observable } from 'rxjs';
 import { CatsService } from './cats.service';
-import { CreateCatDto } from './dto/create-cat.dto';
-import { UpdateCatDto } from './dto/update-cat.dto';
+import { CreateCatDto } from './models/create-cat.dto';
+import { UpdateCatDto } from './models/update-cat.dto';
 import { Cat } from './entities/cat.entity';
 
 @Controller('cats')

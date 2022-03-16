@@ -1,4 +1,5 @@
-import { CatI } from "../interfaces/cat.interface";
+import { ICat } from "../models/cat.interface";
+
 
 export const CatsJson = [
   {
@@ -433,4 +434,4 @@ export const CatsJson = [
     "width": 247,
     "height": 204
   }
-] as CatI[];
+] as ICat[];

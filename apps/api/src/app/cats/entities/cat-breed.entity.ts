@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CatWeight } from "../interfaces/cat-weight.interface";
+import { ICatWeight } from "../models/cat-weight.interface";
 
 export class CatBreed implements CatBreed {
     @ApiProperty({
         description: 'The cat weight',
         example : '',
       })
-    weight: CatWeight;
+    weight: ICatWeight;
     @ApiProperty({
         description: 'The cat id',
         example : '',

@@ -1,9 +1,11 @@
-import { Category } from '../interfaces/category.interface';
-import { CatBreedI } from '../interfaces/cat-breeds.interface';
-import { ApiProperty } from '@nestjs/swagger';
-import { CatI } from '../interfaces/cat.interface';
 
-export class UpdateCatDto implements CatI {
+import { ICatBreed } from './cat-breeds.interface';
+import { ApiProperty } from '@nestjs/swagger';
+import { ICat } from './cat.interface';
+import { ICategory } from './category.interface';
+
+
+export class UpdateCatDto implements ICat {
     @ApiProperty({
         example: [{
           weight: { imperial: '7 - 16', metric: '3 - 7' },
@@ -48,9 +50,9 @@ export class UpdateCatDto implements CatI {
         }],
         description: 'The breed of the Cat',
       })
-      breeds?: CatBreedI[];
+      breeds?: ICatBreed[];
       @ApiProperty({ example:[{ "id": 5, "name": "boxes" }], description: 'The category of the cat' })
-      categories?: Category[];
+      categories?: ICategory[];
       @ApiProperty({ example:  '12343', description: 'The cat id' })
       id: string;
       @ApiProperty({ example:  'https://cdn2.thecatapi.com/images/251.jpg', description: 'The picture url' })
