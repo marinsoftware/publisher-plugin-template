@@ -49,3 +49,6 @@ Visit the [Nx Documentation](https://nx.dev) to learn more.
 - 'Jest Runner' for testing
 
 
+### Logging 
+https://github.com/vanthome/winston-elasticsearch
+https://github.com/gremo/nest-winston

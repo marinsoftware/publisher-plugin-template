@@ -1,12 +1,9 @@
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { CatsModule } from './cats/cats.module';
 import { ShibeModule } from './shibe/shibe.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { LoggingInterceptor } from './logging.interceptor';
-import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -15,14 +12,8 @@ import { LoggerModule } from 'nestjs-pino';
     CatsModule,
     ShibeModule,
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
-    LoggerModule.forRoot()
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-  ],
+  providers: [Logger],
 })
 export class AppModule {}
