@@ -6,6 +6,7 @@ import { ShibeModule } from './shibe/shibe.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './logging.interceptor';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { LoggingInterceptor } from './logging.interceptor';
     CatsModule,
     ShibeModule,
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
+    LoggerModule.forRoot()
   ],
   controllers: [],
   providers: [
