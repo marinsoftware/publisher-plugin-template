@@ -6,8 +6,9 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
-import { WinstonModule } from 'nest-winston';
+import { utilities, WinstonModule } from 'nest-winston';
 import { ElasticsearchTransport } from 'winston-elasticsearch';
+import winston = require('winston');
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
@@ -15,12 +16,28 @@ const esTransportOpts = {
   },
 };
 const esTransport = new ElasticsearchTransport(esTransportOpts);
+
+const consoleLogging = new winston.transports.Console({
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.ms(),
+    utilities.format.nestLike('MyApp', { prettyPrint: true }),
+  ),
+});
+const errorFile = new winston.transports.File({level: 'error', filename: 'error.json'});
+const combinedFile = new winston.transports.File({level: 'info', filename: 'combined.json'});
+function transports(environment: string): winston.transport[] {
+  if(environment === 'prouction') {
+    return [esTransport, errorFile, combinedFile];
+  } 
+  return [consoleLogging, combinedFile, errorFile]
+}
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
     bufferLogs: true,
     logger: WinstonModule.createLogger({
-      transports: [esTransport],
+      transports: transports(process.env.NODE_ENV),
     }),
   });
   const globalPrefix = 'api';

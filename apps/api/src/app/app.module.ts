@@ -4,6 +4,9 @@ import { Logger, Module } from '@nestjs/common';
 import { CatsModule } from './cats/cats.module';
 import { ShibeModule } from './shibe/shibe.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { AllExceptionsFilter } from './all-exceptions.filter';
+import { TimeoutInterceptor } from './timeout.interceptor';
 
 @Module({
   imports: [
@@ -14,6 +17,16 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
   ],
   controllers: [],
-  providers: [Logger],
+  providers: [
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor
+    }
+  ],
 })
 export class AppModule {}

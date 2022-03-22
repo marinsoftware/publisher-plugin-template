@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>corporate-modern-pom-v2</artifactId>
+        <groupId>com.marin</groupId>
+        <version>[1.1,1.1.9999)</version>
+        <!-- relativePath is intentionally empty to eliminate noisy maven warning -->
+        <relativePath />
+    </parent>
+    <groupId>com.marin.frontend</groupId>
+    <artifactId>marin-frontend-api-module</artifactId>
+    <version>1.163-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>marin-frontend-api-module</name>
+    <description>marin-frontend-api-module</description>
+    <modules>
+        <module>marin-frontend-api-service</module>
+        <module>marin-frontend-report-service</module>
+    </modules>
+    <distributionManagement>
+        <repository>
+            <id>marinsoftware</id>
+            <url>http://nexus:8085/nexus/content/repositories/marinsoftware</url>
+        </repository>
+        <snapshotRepository>
+            <id>marinsnapshots</id>
+            <url>http://nexus:8085/nexus/content/repositories/marinsnapshots</url>
+        </snapshotRepository>
+        <site>
+            <id>portal</id>
+            <url>scp://${site.user}@${site.host}${site.root}/${project.version}/${project.artifactId}</url>
+        </site>
+    </distributionManagement>
+    <properties>
+        <assembly.descriptor>src/assembly/assembly.xml</assembly.descriptor>
+        <skip.marin.assembly>false</skip.marin.assembly>
+        <version.git.dependencies>1.163-SNAPSHOT</version.git.dependencies>
+        <version.legacy.monolith>${project.parent.version}</version.legacy.monolith>
+    </properties>
+    <dependencies>
+        <dependency>
+            <!-- brings in the shared jar manifest -->
+            <groupId>com.marin</groupId>
+            <artifactId>corporate-modern-poms-v2-support</artifactId>
+            <version>[1.1,1.1.9999)</version>
+            <type>tar.gz</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <!-- brings in the contract JS repo-->
+            <groupId>com.marin.frontend</groupId>
+            <artifactId>marin-shared-js-lib</artifactId>
+            <version>${project.version}</version>
+            <type>tar.gz</type>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>marin</id>
+            <url>http://nexus:8085/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://nexus:8085/nexus/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>apache-releases</id>
+            <url>https://repository.apache.org/content/groups/public</url>
+        </repository>
+        <!-- for zkclient -->
+        <repository>
+            <id>sonatype</id>
+            <url>http://oss.sonatype.org/content/groups/public</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>marin</id>
+            <url>http://nexus:8085/nexus/content/groups/public</url>
+        </pluginRepository>
+
+    </pluginRepositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>shared-js-unpack</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <includeArtifactIds>marin-shared-js-lib</includeArtifactIds>
+                            <includeGroupIds>com.marin</includeGroupIds>
+                            <excludeTransitive>true</excludeTransitive>
+                            <failBuild>true</failBuild>
+                            <failOnMissingClassifierArtifact>true</failOnMissingClassifierArtifact>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>npm.install</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="node.module.install">
+                                <exec executable="npm" failonerror="true">
+                                    <arg value="install" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm.build</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="node.module.build">
+                                <exec executable="npm" failonerror="true">
+                                    <arg value="run" />
+                                    <arg value="build" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm.test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <target name="node.test">
+                                <exec executable="npm" failonerror="true">
+                                    <arg value="test" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
