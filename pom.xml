@@ -9,15 +9,11 @@
         <relativePath />
     </parent>
     <groupId>com.marin.frontend</groupId>
-    <artifactId>marin-frontend-api-module</artifactId>
+    <artifactId>node-swagger</artifactId>
     <version>1.163-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>marin-frontend-api-module</name>
-    <description>marin-frontend-api-module</description>
-    <modules>
-        <module>marin-frontend-api-service</module>
-        <module>marin-frontend-report-service</module>
-    </modules>
+    <name>node-swagger</name>
+    <description>node-swagger</description>
     <distributionManagement>
         <repository>
             <id>marinsoftware</id>
@@ -44,14 +40,6 @@
             <groupId>com.marin</groupId>
             <artifactId>corporate-modern-poms-v2-support</artifactId>
             <version>[1.1,1.1.9999)</version>
-            <type>tar.gz</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <!-- brings in the contract JS repo-->
-            <groupId>com.marin.frontend</groupId>
-            <artifactId>marin-shared-js-lib</artifactId>
-            <version>${project.version}</version>
             <type>tar.gz</type>
             <scope>provided</scope>
         </dependency>
@@ -89,27 +77,6 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>shared-js-unpack</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <includeArtifactIds>marin-shared-js-lib</includeArtifactIds>
-                            <includeGroupIds>com.marin</includeGroupIds>
-                            <excludeTransitive>true</excludeTransitive>
-                            <failBuild>true</failBuild>
-                            <failOnMissingClassifierArtifact>true</failOnMissingClassifierArtifact>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -134,9 +101,9 @@
                         </goals>
                         <configuration>
                             <target name="node.module.build">
-                                <exec executable="npm" failonerror="true">
-                                    <arg value="run" />
+                                <exec executable="nx" failonerror="true">
                                     <arg value="build" />
+                                    <arg value="api" />
                                 </exec>
                             </target>
                         </configuration>
@@ -150,8 +117,9 @@
                         <inherited>false</inherited>
                         <configuration>
                             <target name="node.test">
-                                <exec executable="npm" failonerror="true">
+                                <exec executable="nx" failonerror="true">
                                     <arg value="test" />
+                                    <arg value="api" />
                                 </exec>
                             </target>
                         </configuration>

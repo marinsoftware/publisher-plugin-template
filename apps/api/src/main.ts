@@ -1,14 +1,11 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
 import { utilities, WinstonModule } from 'nest-winston';
 import { ElasticsearchTransport } from 'winston-elasticsearch';
 import winston = require('winston');
+
+const globalPrefix = 'api';
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
@@ -21,11 +18,11 @@ const consoleLogging = new winston.transports.Console({
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.ms(),
-    utilities.format.nestLike('MyApp', { prettyPrint: true }),
+    utilities.format.nestLike('NodeSwagger', { prettyPrint: true }),
   ),
 });
-const errorFile = new winston.transports.File({level: 'error', filename: 'error.json'});
-const combinedFile = new winston.transports.File({level: 'info', filename: 'combined.json'});
+const errorFile = new winston.transports.File({level: 'error', filename: `logs/${globalPrefix}/error.json`});
+const combinedFile = new winston.transports.File({level: 'info', filename: `logs/${globalPrefix}/combined.json`});
 function transports(environment: string): winston.transport[] {
   if(environment === 'prouction') {
     return [esTransport, errorFile, combinedFile];
@@ -40,7 +37,7 @@ async function bootstrap() {
       transports: transports(process.env.NODE_ENV),
     }),
   });
-  const globalPrefix = 'api';
+
   const config = new DocumentBuilder()
     .setTitle('Cats')
     .setDescription('Cats API')
