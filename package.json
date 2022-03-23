@@ -26,6 +26,7 @@
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "pattern-replace": "^0.1.2",
     "pino-elasticsearch": "^6.2.0",
     "pino-http": "^6.6.0",
     "reflect-metadata": "^0.1.13",
@@ -38,7 +39,8 @@
     "unique-names-generator": "^4.7.1",
     "uuid": "^8.3.2",
     "winston": "^3.6.0",
-    "winston-elasticsearch": "^0.16.1"
+    "winston-elasticsearch": "^0.16.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",

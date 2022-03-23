@@ -4,12 +4,13 @@ import { AppModule } from './app/app.module';
 import { utilities, WinstonModule } from 'nest-winston';
 import { ElasticsearchTransport } from 'winston-elasticsearch';
 import winston = require('winston');
+import config from '../config.helper';
 
 const globalPrefix = 'api';
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
-    node: 'http://elasticsearch:9200',
+    node: `${config.GELF.host}:${config.GELF.port}`,
   },
 };
 const esTransport = new ElasticsearchTransport(esTransportOpts);
@@ -22,7 +23,7 @@ const consoleLogging = new winston.transports.Console({
   ),
 });
 const errorFile = new winston.transports.File({level: 'error', filename: `logs/${globalPrefix}/error.json`});
-const combinedFile = new winston.transports.File({level: 'info', filename: `logs/${globalPrefix}/combined.json`});
+const combinedFile = new winston.transports.File({level: 'info', filename: `logs/${globalPrefix}combined.json`});
 function transports(environment: string): winston.transport[] {
   if(environment === 'prouction') {
     return [esTransport, errorFile, combinedFile];
