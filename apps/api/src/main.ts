@@ -10,7 +10,8 @@ const globalPrefix = 'api';
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
-    node: `${config.GELF.host}:${config.GELF.port}`,
+    // node: `${config.GELF.host}:${config.GELF.port}`,
+    node: 'http://localhost:9200',
   },
 };
 const esTransport = new ElasticsearchTransport(esTransportOpts);

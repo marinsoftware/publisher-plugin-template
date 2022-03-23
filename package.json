@@ -29,6 +29,7 @@
     "pattern-replace": "^0.1.2",
     "pino-elasticsearch": "^6.2.0",
     "pino-http": "^6.6.0",
+    "properties": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.0.0",
     "sequelize": "^6.17.0",

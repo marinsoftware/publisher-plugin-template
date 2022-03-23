@@ -5,8 +5,8 @@ import _ = require('lodash');
 import YAML = require('yamljs');
 import path = require('path');
 import { ENCODING } from './entry.constant';
-const envFileLocation = path.join(__dirname, '../../conf/env.properties');
-const yamlFileLocation = path.join(__dirname, '../../conf/config.yaml');
+const envFileLocation = path.join(__dirname, '../../../conf/env.properties');
+const yamlFileLocation = path.join(__dirname, '../../../conf/config.yaml');
 
 // Read env and yaml files
 let propertiesFileContent = undefined;
