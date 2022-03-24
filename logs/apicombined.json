@@ -202,3 +202,32 @@
 {"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe/:id, GET} route"}
 {"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe/:id, DELETE} route"}
 {"context":"NestApplication","level":"info","message":"Nest application successfully started"}
+{"context":"NestFactory","level":"info","message":"Starting Nest application..."}
+{"context":"InstanceLoader","level":"info","message":"UsersModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PassportModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"MongooseModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"JwtModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HttpModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"TerminusModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"CatsModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"AppModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HealthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"AuthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"MongooseCoreModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"MongooseModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ShibeModule dependencies initialized"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/api/health}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/health, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"CatsController {/api/cats}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/cats, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/cats, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/cats/:id, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/cats/:id, PATCH} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/cats/:id, DELETE} route"}
+{"context":"RoutesResolver","level":"info","message":"ShibeController {/api/shibe}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe/:id, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/api/shibe/:id, DELETE} route"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started"}
+{"level":"info","message":"GET /api/shibe 304 23.363666ms undefined - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36 ::1"}

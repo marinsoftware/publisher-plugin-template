@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
 import { config } from '../../config.helper';
+import * as os  from 'os';
+import _ = require('lodash');
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
@@ -8,7 +10,8 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(request: Request, response: Response, next: NextFunction): void {
     const startAt = process.hrtime();
-    const { ip, method, originalUrl } = request;
+    console.log('request: ', request);
+    const { ip, method, originalUrl, errorEmitted,  } = request;
     const userAgent = request.get('user-agent') || '';
 
     response.on('finish', () => {
@@ -57,4 +60,28 @@ export class LoggerMiddleware implements NestMiddleware {
 //   legacyClientId: legacyClientId || '',
 //   legacyCustomerId: legacyCustomerId || '',
 //   legacyUserId: legacyUserId || '',
+// };
+
+// const logObject: any = {
+//   category: 'performance',
+//   env: config.ENVIRONMENT,
+//   namespace: config.ENVIRONMENT,
+//   // traceId: reqId,
+//   host: os.hostname(),
+//   service: _.get('service', config.SERVER.name),
+//   // headers: requestParamsHeaders,
+//   point: endpoint,
+//   url_path: reqDetails.url_path,
+//   // shortPoint: shortPoint,
+//   // requestService: reqService,
+//   // requestType: reqDetails.type || '',
+//   isSuccess: !error ? 'true' : 'false',
+//   // resultString: results.join('-'), // FEND-6732: field moved from result -> resultString to avoid Kibana conflict
+//   // startTimeDate: startTimeDate, // FEND-6732: field moved from startTime -> startTimeDate to avoid Kibana conflict
+//   duration: durationMilliSeconds,
+//   size: size,
+//   categoryVersion: config.PERFORMANCE_LOG.VERSION.toFixed(1),
+//   params: JSON.stringify({ params }),
+//   // error: gelfError,
+//   // numOfDays: numOfDays || 0,
 // };
