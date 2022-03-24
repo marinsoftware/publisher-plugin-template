@@ -1,12 +1,13 @@
 import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
-import { Logger, Module } from '@nestjs/common';
+import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { CatsModule } from './cats/cats.module';
 import { ShibeModule } from './shibe/shibe.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 import { TimeoutInterceptor } from './timeout.interceptor';
+import { LoggerMiddleware } from './logger.middleware';
 
 @Module({
   imports: [
@@ -29,4 +30,8 @@ import { TimeoutInterceptor } from './timeout.interceptor';
     }
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

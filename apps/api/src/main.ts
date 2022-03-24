@@ -10,8 +10,8 @@ const globalPrefix = 'api';
 const esTransportOpts = {
   level: 'info',
   clientOpts: {
-    // node: `${config.GELF.host}:${config.GELF.port}`,
-    node: 'http://localhost:9200',
+    node: `https://${config.GELF.host}:${config.GELF.port}`,
+    // node: 'http://localhost:9200',
   },
 };
 const esTransport = new ElasticsearchTransport(esTransportOpts);
@@ -26,10 +26,10 @@ const consoleLogging = new winston.transports.Console({
 const errorFile = new winston.transports.File({level: 'error', filename: `logs/${globalPrefix}/error.json`});
 const combinedFile = new winston.transports.File({level: 'info', filename: `logs/${globalPrefix}combined.json`});
 function transports(environment: string): winston.transport[] {
-  if(environment === 'prouction') {
+  if(environment === 'production') {
     return [esTransport, errorFile, combinedFile];
   } 
-  return [consoleLogging, combinedFile, errorFile]
+  return [consoleLogging, combinedFile, errorFile, esTransport]
 }
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
