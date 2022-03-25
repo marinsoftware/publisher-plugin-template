@@ -1,1 +1,2 @@
 {"context":"{\"statusCode\":404,\"timestamp\":\"2022-03-24T10:41:47.931Z\",\"path\":\"/favicon.ico\"}","level":"error","message":"Exception occured","stack":["404"]}
+{"context":"{\"statusCode\":500,\"timestamp\":\"2022-03-25T15:47:35.439Z\",\"path\":\"/api/cats/2\"}","level":"error","message":"Exception occured","stack":["500"]}

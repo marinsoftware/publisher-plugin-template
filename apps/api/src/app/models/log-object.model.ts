@@ -13,7 +13,7 @@ export class LogObject {
   requestType: RequestType | string;
   isSuccess: boolean;
   resultString: string; 
-  startTimeDate: Date; 
+  startTimeDate: Date | number; 
   duration: number;
   size: number;
   categoryVersion: number;
