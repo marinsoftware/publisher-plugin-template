@@ -9,7 +9,9 @@ import { LogObject } from './models/log-object.model';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   logObject: LogObject;
-  constructor(private logger: Logger) {}
+  constructor(private logger: Logger) {
+    this.logObject = new LogObject();
+  }
 
   use(request: RequestCustom, response: Response, next: NextFunction): void {
     const startAt = process.hrtime();
