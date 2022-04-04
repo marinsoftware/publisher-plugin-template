@@ -3,9 +3,17 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "start": "pm2 install pm2-logrotate; pm2 restart $npm_package_config_pm2config --only marin-snapchat-api --env prod",
+    "stop": "pm2 stop $npm_package_config_pm2config --only marin-snapchat-api",
+    "restart": "pm2 restart $npm_package_config_pm2config --only marin-snapchat-api",
+    "start-dev": "nx serve",
+    "build": "rm -rf dist/ && nx build",
+    "test": "nx test --coverage --colors --reporters=jest-junit",
+    "clear_jest": "jest --clearCache",
+    "pm2-update": "pm2 update"
+  },
+  "config": {
+    "pm2config": "pm2.json"
   },
   "private": true,
   "dependencies": {
