@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="node.test"  >
+<target name="node.test">
+  <exec failonerror="true" executable="nx">
+    <arg value="test"/>
+    <arg value="api"/>
+  </exec>
+</target>
+</project>

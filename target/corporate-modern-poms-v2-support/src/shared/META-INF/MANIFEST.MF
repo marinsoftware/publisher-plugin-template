@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven
+Maven-Version: ${maven.version}
+Implementation-Title: ${project.artifactId}
+Implementation-Version: ${git.commit.id} built at ${git.build.time}
+Implementation-Vendor-Id: com.marin
+Specification-Title: ${project.artifactId}
+Specification-Version: ${project.version}-${project.artifactId}
+GroupId: ${project.groupId}
+ArtifactId: ${project.artifactId}
+Build-Jdk: ${java.version}
+Job-Name: ${env.JOB_NAME}
+Build-Number: ${env.BUILD_NUMBER}
+Build-Tag: ${env.BUILD_TAG}
+Build-Url: ${env.BUILD_URL}
+Jenkins-Url: ${env.JENKINS_URL}
+Git-Branch: ${git.branch}
+Git-Https-Url: ${git.https.url}
+Git-Commits-Url: ${git.commits.url}
+
+
