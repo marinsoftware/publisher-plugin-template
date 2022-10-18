@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="nx.module.install"  >
+<target name="nx.module.install">
+  <exec failonerror="true" executable="npm">
+    <arg value="install"/>
+    <arg value="--save"/>
+    <arg value="nx"/>
+  </exec>
+</target>
+</project>

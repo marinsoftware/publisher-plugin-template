@@ -94,6 +94,22 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>nx.install</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target name="nx.module.install">
+                                <exec executable="npm" failonerror="true">
+                                    <arg value="install" />
+                                    <arg value="--save" />
+                                    <arg value="nx" />
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>npm.build</id>
                         <phase>initialize</phase>
                         <goals>

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Created-By: Apache Maven
+Maven-Version: 3.2.5
+Implementation-Title: node-swagger
+Implementation-Version: 6d22d5d61bc5ac960ae947a0b9bfd3076f434990 built at 2022-10-18
+Implementation-Vendor-Id: com.marin
+Specification-Title: node-swagger
+Specification-Version: 1.163-SNAPSHOT-node-swagger
+GroupId: com.marin.frontend
+ArtifactId: node-swagger
+Build-Jdk: 18.0.1.1
+Job-Name: ${env.JOB_NAME}
+Build-Number: ${env.BUILD_NUMBER}
+Build-Tag: ${env.BUILD_TAG}
+Build-Url: ${env.BUILD_URL}
+Jenkins-Url: ${env.JENKINS_URL}
+Git-Branch: main
+Git-Https-Url: ${git.https.url}
+Git-Commits-Url: ${git.commits.url}
+
+
