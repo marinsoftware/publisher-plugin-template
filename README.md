@@ -1,18 +1,18 @@
-
-
-# Node Swagger - NX Workspace
-
-NX workspace is a build system specifically influenced by the Angular CLI to create large applications. 
+# Starting point
+There is a sample application within the apps directory called `api`, this can remain as it is. However, you may use it in action by running `nx serve api`.
+To create a new NestJS application, please run `nx g @nrwl/nest:app my-new-app`; this will scaffold a new application within the apps directory. Then change the values in the `nx.json`, `pm2.json` `package.json` and `pom.xml` to reflect the application's name and the project/workspace name. Then run `nx serve nmy-new-app` or `npm run start-dev` to see the application generated in action.
+## Node Swagger - NX Workspace
+NX workspace is a build system influenced explicitly by the Angular CLI to create large applications. We are using it here because we can easily add new applications into the workspace enabling better code sharing between applications. Using the `NX Console` vscode plugin, the Nest CLI can easily be clicked through for a better dev experience.
 
 ## Swagger
-Utilising the OpenApi specification, we can create generated code from the backend api to use on the frontend. 
+Utilising the OpenApi specification, we can have easy-to-follow documentation with examples to create interfaces to consume api's much more quickly. Furthermore, using the URL end-point, we can generate frontend services in Angular to communicate with the backend code using generators instead of manually managing the frontend services. This automation reduces development time significantly.
 
 ## NestJS
 
-Nest JS is a MVC NodeJS framework influced by Angular, therefore it has a powerful CLI and loosely coupled component archtecture to create high quality typescript applications. The NX workspace fully supports NestJS and the CLI commands are integrated to speed up development. 
+Nest JS is a MVC NodeJS framework influenced by Angular. Therefore it has a powerful CLI and loosely coupled component architecture to create high-quality typescript applications. The NX workspace fully supports NestJS and the CLI commands are integrated to speed up development. 
 
 http://localhost:3000/api is hosting the swagger ui
-http://localhost:3000/api-json has the Swagger Json that is consumed by the openapi-generator to generate the generated code.
+http://localhost:3000/api-json has the Swagger JSON consumed by the openapi-generator to generate the generated code.
 
 ## Development server
 
