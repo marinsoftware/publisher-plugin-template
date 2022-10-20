@@ -1,6 +1,6 @@
 {
   "name": "node-swagger",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "start": "pm2 install pm2-logrotate; pm2 restart $npm_package_config_pm2config --only api --env prod",

@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>corporate-modern-pom-v2</artifactId>
@@ -9,30 +13,35 @@
         <relativePath />
     </parent>
     <groupId>com.marin.frontend</groupId>
-    <artifactId>node-swagger</artifactId>
-    <version>1.163-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <name>node-swagger</name>
-    <description>node-swagger</description>
+    <artifactId>social-publisher-gateway-plugins</artifactId>
+    <version>1.3-SNAPSHOT</version>
+    <!-- <packaging>pom</packaging> -->
+    <name>social-publisher-gateway-plugins</name>
+    <description>social-publisher-gateway-plugins</description>
     <distributionManagement>
         <repository>
             <id>marinsoftware</id>
-            <url>http://nexus:8085/nexus/content/repositories/marinsoftware</url>
+            <url
+      >http://nexus:8085/nexus/content/repositories/marinsoftware</url>
         </repository>
         <snapshotRepository>
             <id>marinsnapshots</id>
-            <url>http://nexus:8085/nexus/content/repositories/marinsnapshots</url>
+            <url
+      >http://nexus:8085/nexus/content/repositories/marinsnapshots</url>
         </snapshotRepository>
         <site>
             <id>portal</id>
-            <url>scp://${site.user}@${site.host}${site.root}/${project.version}/${project.artifactId}</url>
+            <url
+      >scp://${site.user}@${site.host}${site.root}/${project.version}/${project.artifactId}</url>
         </site>
     </distributionManagement>
     <properties>
         <assembly.descriptor>src/assembly/assembly.xml</assembly.descriptor>
         <skip.marin.assembly>false</skip.marin.assembly>
-        <version.git.dependencies>1.163-SNAPSHOT</version.git.dependencies>
-        <version.legacy.monolith>${project.parent.version}</version.legacy.monolith>
+        <version.git.dependencies
+    >1.3-SNAPSHOT</version.git.dependencies>
+        <version.legacy.monolith
+    >${project.parent.version}</version.legacy.monolith>
     </properties>
     <dependencies>
         <dependency>
@@ -71,10 +80,13 @@
             <id>marin</id>
             <url>http://nexus:8085/nexus/content/groups/public</url>
         </pluginRepository>
-
     </pluginRepositories>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -94,22 +106,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>nx.install</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <target name="nx.module.install">
-                                <exec executable="npm" failonerror="true">
-                                    <arg value="install" />
-                                    <arg value="--save" />
-                                    <arg value="nx" />
-                                </exec>
-                            </target>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>npm.build</id>
                         <phase>initialize</phase>
                         <goals>
@@ -117,7 +113,8 @@
                         </goals>
                         <configuration>
                             <target name="node.module.build">
-                                <exec executable="nx" failonerror="true">
+                                <exec executable="npm" failonerror="true">
+                                    <arg value="run" />
                                     <arg value="build" />
                                     <arg value="api" />
                                 </exec>
@@ -133,9 +130,8 @@
                         <inherited>false</inherited>
                         <configuration>
                             <target name="node.test">
-                                <exec executable="nx" failonerror="true">
+                                <exec executable="npm" failonerror="true">
                                     <arg value="test" />
-                                    <arg value="api" />
                                 </exec>
                             </target>
                         </configuration>
