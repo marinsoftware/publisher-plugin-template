@@ -13,11 +13,11 @@
         <relativePath />
     </parent>
     <groupId>com.marin.frontend</groupId>
-    <artifactId>social-publisher-gateway-plugins</artifactId>
+    <artifactId>nest-swagger-node</artifactId>
     <version>1.3-SNAPSHOT</version>
     <!-- <packaging>pom</packaging> -->
-    <name>social-publisher-gateway-plugins</name>
-    <description>social-publisher-gateway-plugins</description>
+    <name>nest-swagger-node</name>
+    <description>nest-swagger-node</description>
     <distributionManagement>
         <repository>
             <id>marinsoftware</id>
