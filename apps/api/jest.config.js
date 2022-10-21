@@ -11,5 +11,8 @@ module.exports = {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/api',
+  coverageDirectory: '../../target/coverage',
+  coverageReporters: ['text', 'cobertura'],
+  reporters: ['default', 'jest-junit'],
+  testResultsProcessor: 'jest-junit',
 };
