@@ -46,14 +46,14 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>sh/publisher-gateway-plugins.sh</source>
+            <source>sh/nest-swagger-node.sh</source>
             <outputDirectory>bin</outputDirectory>
             <destName>${project.artifactId}</destName>
             <fileMode>0755</fileMode>
             <lineEnding>unix</lineEnding>
         </file>
         <file>
-            <source>pm2-marin-snapchat-api.json</source>
+            <source>pm2.json</source>
             <outputDirectory>.</outputDirectory>
         </file>
         <file>
