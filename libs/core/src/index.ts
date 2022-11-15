@@ -1,3 +1,3 @@
 export * from './core.module';
 export * from './enums/encoding.enum';
-export * from './config/config.helper';
+export * from './config.helper';
