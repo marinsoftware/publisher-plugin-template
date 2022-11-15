@@ -4,7 +4,7 @@ import { AppModule } from './app/app.module';
 import { utilities, WinstonModule } from 'nest-winston';
 import { ElasticsearchTransport } from 'winston-elasticsearch';
 import winston = require('winston');
-import config from '../config.helper';
+import { config } from '@libs/core';
 
 const globalPrefix = 'api';
 const esTransportOpts = {
@@ -28,7 +28,7 @@ const combinedFile = new winston.transports.File({level: 'info', filename: `logs
 function transports(environment: string): winston.transport[] {
   if(environment === 'production') {
     return [esTransport, errorFile, combinedFile];
-  } 
+  }
   return [consoleLogging, combinedFile, errorFile, esTransport]
 }
 async function bootstrap() {

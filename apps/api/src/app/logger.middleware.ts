@@ -1,7 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { RequestCustom } from './models/request-details.interface';
 import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
-import { config } from '../../config.helper';
 import * as os from 'os';
 import _ = require('lodash');
 import { LogObject } from './models/log-object.model';
