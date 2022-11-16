@@ -1,6 +1,8 @@
 {
   "version": 2,
   "projects": {
-    "api": "apps/api"
+    "api": "apps/api",
+    "core": "libs/core",
+    "logger": "libs/logger"
   }
 }

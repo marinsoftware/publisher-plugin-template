@@ -4,7 +4,7 @@ import Replacer = require('pattern-replace');
 import _ = require('lodash');
 import YAML = require('yamljs');
 import path = require('path');
-import { ENCODING } from './entry.constant';
+import { ENCODING } from '@libs/core';
 const envFileLocation = path.join(__dirname, '../../../conf/env.properties');
 const yamlFileLocation = path.join(__dirname, '../../../conf/config.yaml');
 
@@ -167,6 +167,7 @@ export interface Config {
     frontendHostname: string;
     protocol: string;
     host: string;
+    env: string;
   };
   REDIS: {
     enabled: boolean;
