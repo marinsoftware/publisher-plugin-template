@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { config } from '@libs/core';
 import { hostname } from 'os';
 import gelf = require('gelf-pro');
@@ -11,7 +11,7 @@ import { isObject, extend } from 'lodash';
 export class GelfLogger {
   public gelfLogger = gelf;
 
-  constructor(public logger: Logger) {
+  constructor() {
     // Initialise the connection
     this.gelfLogger.setConfig({
       fields: {
@@ -40,10 +40,6 @@ export class GelfLogger {
       params,
     }, logMessage);
 
-    this.gelfLogger.message(debugType, 7, logObject, (err) => {
-      if (err) {
-        this.logger.error(`ERROR: ${err}`);
-      }
-    });
+    this.gelfLogger.message(debugType, 7, logObject);
   }
 }

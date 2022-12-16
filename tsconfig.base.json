@@ -17,7 +17,8 @@
     "paths": {
       "@libs/core": ["libs/core/src/index.ts"],
       "@libs/logger": ["libs/logger/src/index.ts"]
-    }
+    },
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "tmp"]
 }

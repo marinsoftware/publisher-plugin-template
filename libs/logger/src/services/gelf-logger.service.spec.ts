@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GelfLogger } from './gelf-logger.service';
-import { Logger } from '@nestjs/common';
 
 describe('GelfLogger', () => {
   let service: GelfLogger;
@@ -8,7 +7,7 @@ describe('GelfLogger', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [GelfLogger, Logger],
+      providers: [GelfLogger],
     }).compile();
 
     service = module.get<GelfLogger>(GelfLogger);
@@ -40,14 +39,5 @@ describe('GelfLogger', () => {
     expect(messageSpy).toHaveBeenCalled();
     const args = messageSpy.mock.calls[0];
     expect(args[2].newMessage).toEqual('hello world');
-  });
-
-  it('should handle errors', () => {
-    messageSpy.mockImplementation((debugType, level, obj, fn) => {
-      fn('oops...');
-    });
-    const coreLogger = jest.spyOn(service.logger, 'error');
-    service.debug<object, object>('debug_type', { newMessage: 'hello world' }, { param: 'some param' });
-    expect(coreLogger).toHaveBeenCalledWith('ERROR: oops...');
   });
 });
