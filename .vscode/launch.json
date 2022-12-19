@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+  {
+      "name": "Debug Backend",
+      "type": "node",
+      "request": "launch",
+      "args": [
+        "apps/api/src/main.ts",
+        "|",
+        "npx pino-pretty"
+      ],
+      "runtimeArgs": [
+        "--require",
+        "ts-node/register",
+        "--require",
+        "tsconfig-paths/register",
+        "--trace-warnings",
+      ],
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "env": {
+        "NODE_ENV": "local",
+        "NODE_PORT": "8000",
+        "TS_NODE_PROJECT": "apps/api/tsconfig.app.json", // Specify the tsconfig to use
+      },
+      "sourceMaps": true,
+      "console": "internalConsole",
+      "outputCapture": "std",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**" // Disable the "could not read source map" error for node_modules
+      ]
+    }
+  ]
+}

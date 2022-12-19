@@ -1,10 +1,8 @@
+import { contextService } from '@libs/core';
 import { MarinLogger } from '@libs/logger';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
-import pkg from '../../../package.json';
-
-const globalPrefix = 'api';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,7 +11,7 @@ async function bootstrap() {
   });
 
   const marinLogger = app.get<MarinLogger>(MarinLogger);
-  marinLogger.setContext(pkg.name);
+  marinLogger.setContext(contextService.getApplicationName());
   app.useLogger(marinLogger);
 
   const config = new DocumentBuilder()
@@ -23,9 +21,9 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  app.setGlobalPrefix(globalPrefix);
   const port = process.env.PORT || 3333;
   await app.listen(port);
+  marinLogger.log(`Service started on ${port}`);
 }
 
 bootstrap();

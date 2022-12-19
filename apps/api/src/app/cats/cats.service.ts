@@ -3,12 +3,33 @@ import { CatsJson } from './mock/cats-json';
 import { CreateCatDto } from './models/create-cat.dto';
 import { UpdateCatDto } from './models/update-cat.dto';
 import { Cat } from './entities/cat.entity';
+import { HealthCheckResponse, IHealthCheckService } from '../health/health.types';
+import { HealthCheckService } from '../health/health.decorator';
 
 @Injectable()
-export class CatsService {
+@HealthCheckService()
+export class CatsService implements IHealthCheckService {
   cats: Cat[];
   constructor() {
     this.cats = CatsJson;
+  }
+
+  /**
+   * Get the service name
+   */
+  public getServiceName(): string {
+    return 'CatsService';
+  }
+
+  /**
+   * Perform a health check
+   */
+  public async healthCheck(level: string): Promise<HealthCheckResponse> {
+    if (level === 'L2') {
+      return {
+        healthy: true,
+      }
+    }
   }
 
   create(createCatDto: CreateCatDto) {

@@ -1,6 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { lastValueFrom, map, Observable } from 'rxjs';
 import { CatsService } from './cats.service';
 import { CreateCatDto } from './models/create-cat.dto';
 import { UpdateCatDto } from './models/update-cat.dto';

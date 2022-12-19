@@ -4,7 +4,7 @@ import Replacer = require('pattern-replace');
 import _ = require('lodash');
 import YAML = require('yamljs');
 import path = require('path');
-import { ENCODING } from '@libs/core';
+import { ENCODING } from './enums/encoding.enum';
 const envFileLocation = path.join(__dirname, '../../../conf/env.properties');
 const yamlFileLocation = path.join(__dirname, '../../../conf/config.yaml');
 
