@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project name="maven-antrun-" default="node.module.build"  >
-<target name="node.module.build">
-  <exec failonerror="true" executable="nx">
-    <arg value="build"/>
-    <arg value="api"/>
-  </exec>
-</target>
-</project>

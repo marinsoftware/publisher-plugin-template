@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project name="maven-antrun-" default="node.module.install"  >
-<target name="node.module.install">
-  <exec failonerror="true" executable="npm">
-    <arg value="install"/>
-  </exec>
-</target>
-</project>
