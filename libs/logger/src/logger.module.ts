@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '@libs/core';
-import { GelfLogger } from './services/gelf-logger.service';
 import { MarinLogger } from './services/marin-logger.service';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 
@@ -11,11 +10,9 @@ import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
   ],
   controllers: [],
   providers: [
-    GelfLogger,
     MarinLogger,
   ],
   exports: [
-    GelfLogger,
     MarinLogger,
   ],
 })

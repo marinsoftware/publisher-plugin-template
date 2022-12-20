@@ -1,16 +1,10 @@
-import { GelfLogger } from './gelf-logger.service';
 import { MarinLogger } from './marin-logger.service';
 
 describe('marin-logger.service', () => {
-  let gelfLogger: GelfLogger;
   let marinLogger: MarinLogger;
 
   beforeEach(() => {
-    gelfLogger = new GelfLogger();
-
-    jest.spyOn(gelfLogger, 'debug').mockReturnValue();
-
-    marinLogger = new MarinLogger(gelfLogger);
+    marinLogger = new MarinLogger({});
     jest.spyOn(marinLogger, 'error').mockReturnValue();
     jest.spyOn(marinLogger, 'info').mockReturnValue();
   });
@@ -27,10 +21,5 @@ describe('marin-logger.service', () => {
   it('logs an error to console', () => {
     marinLogger.log('message', { error: 'hello world' });
     expect(marinLogger.error).toHaveBeenCalledWith({ message: 'message', extra: { error: 'hello world' }});
-  });
-
-  it('logs to gelf', () => {
-    marinLogger.log('message', { error: 'hello world' }).withGelf('GELF');
-    expect(gelfLogger.debug).toHaveBeenCalledWith('GELF', 'message', { extra: { error: 'hello world'} } );
   });
 });
