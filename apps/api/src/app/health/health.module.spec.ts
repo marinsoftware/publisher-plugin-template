@@ -11,11 +11,11 @@ describe('health.module', () => {
     healthProvider = {
       metatype: {},
       instance: {
-        getServiceName: () => 'service name'
+        getServiceName: () => 'service name',
       },
     };
     const normalProvider = {
-      metatype: {}
+      metatype: {},
     };
     Reflect.defineMetadata(HEALTH_CHECK_SERVICE_META_KEY, true, healthProvider.metatype);
 
@@ -23,9 +23,9 @@ describe('health.module', () => {
     jest.spyOn(healthCheckFactory, 'registerService');
     module = new HealthModule(
       {
-        getProviders: () => [ healthProvider, normalProvider ],
+        getProviders: () => [healthProvider, normalProvider],
       } as any,
-      healthCheckFactory,
+      healthCheckFactory
     );
 
     module.onModuleInit();

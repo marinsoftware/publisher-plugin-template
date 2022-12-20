@@ -28,4 +28,3 @@ export class Cat implements ICat {
   @ApiProperty({ example: 2128, description: 'The height of the cat' })
   height?: number;
 }
-

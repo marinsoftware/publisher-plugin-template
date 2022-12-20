@@ -1,4 +1,4 @@
-import { RequestType } from "./request-type.enum";
+import { RequestType } from './request-type.enum';
 
 export class LogObject {
   category: 'performance';
@@ -12,16 +12,16 @@ export class LogObject {
   url_path: string;
   requestType: RequestType | string;
   isSuccess: boolean;
-  resultString: string; 
-  startTimeDate: Date | number; 
+  resultString: string;
+  startTimeDate: Date | number;
   duration: number;
   size: number;
   categoryVersion: number;
   params: string;
   error: string;
-  numOfDays:number;
-    constructor() {
-        this.numOfDays = 0;
-        this.requestType = '';
-    }
+  numOfDays: number;
+  constructor() {
+    this.numOfDays = 0;
+    this.requestType = '';
+  }
 }

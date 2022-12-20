@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HealthCheckService } from '../health/health.decorator';
-import {
-  HealthCheckResponse,
-  IHealthCheckService
-} from '../health/health.types';
+import { HealthCheckResponse, IHealthCheckService } from '../health/health.types';
 import { Cat } from './entities/cat.entity';
 import { CatsJson } from './mock/cats-json';
 import { CreateCatDto } from './models/create-cat.dto';

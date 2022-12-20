@@ -1,7 +1,5 @@
 // Interface that all services that require a health check must implement
-export interface IHealthCheckService<
-  Response extends HealthCheckResponse = HealthCheckResponse
-> {
+export interface IHealthCheckService<Response extends HealthCheckResponse = HealthCheckResponse> {
   /**
    * Get the service name that the service has for the health check response
    */

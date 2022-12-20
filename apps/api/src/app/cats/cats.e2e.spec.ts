@@ -11,9 +11,11 @@ xdescribe('Cats', () => {
   const catsService = {
     getAll: () => ['test'],
     create: () => ['test'],
-    findCatById: () => [{
-      id: 'test',
-    }],
+    findCatById: () => [
+      {
+        id: 'test',
+      },
+    ],
   };
 
   beforeAll(async () => {
@@ -29,16 +31,10 @@ xdescribe('Cats', () => {
   });
 
   it(`/GET cats`, () => {
-    return request(app.getHttpServer())
-      .get('/cats')
-      .expect(200)
-      .expect(catsService.getAll());
+    return request(app.getHttpServer()).get('/cats').expect(200).expect(catsService.getAll());
   });
   it(`/GET :id`, () => {
-    return request(app.getHttpServer())
-      .get('/cats/123')
-      .expect(200)
-      .expect(catsService.findCatById());
+    return request(app.getHttpServer()).get('/cats/123').expect(200).expect(catsService.findCatById());
   });
 
   afterAll(async () => {

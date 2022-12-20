@@ -7,8 +7,7 @@ import { Cat } from './entities/cat.entity';
 
 @Controller('cats')
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {
-  }
+  constructor(private readonly catsService: CatsService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create cat' })
@@ -25,8 +24,8 @@ export class CatsController {
     type: Cat,
     isArray: true,
   })
-   getAll()  {
-   return this.catsService.getAll();
+  getAll() {
+    return this.catsService.getAll();
   }
 
   @Get(':id')

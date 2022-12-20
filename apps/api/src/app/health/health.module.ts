@@ -16,24 +16,15 @@ import { HealthController } from './health.controller';
       {
         path: 'admin',
         module: HealthModule,
-      }
+      },
     ]),
   ],
-  providers: [
-    HealthCheckFactory,
-  ],
-  controllers: [
-    HealthController
-  ],
-  exports: [
-    HealthCheckFactory,
-  ],
+  providers: [HealthCheckFactory],
+  controllers: [HealthController],
+  exports: [HealthCheckFactory],
 })
 export class HealthModule implements OnModuleInit {
-  constructor(
-    protected discoveryService: DiscoveryService,
-    protected healthCheckFactory: HealthCheckFactory,
-  ) {}
+  constructor(protected discoveryService: DiscoveryService, protected healthCheckFactory: HealthCheckFactory) {}
 
   /**
    * Initialise the module
@@ -45,9 +36,9 @@ export class HealthModule implements OnModuleInit {
     // Find all the providers that have the health check meta-data,
     // then register it with the health check factory
     providers
-      .filter(provider => this.filterHealthCheckProvider(provider))
-      .map(provider => provider.instance)
-      .forEach(healthService => this.healthCheckFactory.registerService(healthService));
+      .filter((provider) => this.filterHealthCheckProvider(provider))
+      .map((provider) => provider.instance)
+      .forEach((healthService) => this.healthCheckFactory.registerService(healthService));
   }
 
   /**

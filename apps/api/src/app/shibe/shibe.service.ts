@@ -6,17 +6,13 @@ import { Shibe, ShibeDocument } from './schemas/shibe.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { HttpService } from '@nestjs/axios';
 import { map } from 'rxjs';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ShibeService implements OnModuleInit {
   apiUrl: string;
   shibes: Shibe[];
-  constructor(
-    private httpService: HttpService,
-    @InjectModel(Shibe.name) private readonly shibeModel: Model<ShibeDocument>,
-   
-  ) {
+  constructor(private httpService: HttpService, @InjectModel(Shibe.name) private readonly shibeModel: Model<ShibeDocument>) {
     this.apiUrl = 'http://shibe.online/api/shibes';
   }
   async onModuleInit() {
@@ -38,7 +34,7 @@ export class ShibeService implements OnModuleInit {
             };
           });
           console.log(...shibes);
-        this.shibeModel.create(...shibes)
+          this.shibeModel.create(...shibes);
         });
     }
   }
@@ -56,9 +52,7 @@ export class ShibeService implements OnModuleInit {
   }
 
   async delete(id: string) {
-    const deletedShibe = await this.shibeModel
-      .findByIdAndRemove({ _id: id })
-      .exec();
+    const deletedShibe = await this.shibeModel.findByIdAndRemove({ _id: id }).exec();
     return deletedShibe;
   }
 }

@@ -13,7 +13,7 @@ export interface ICatBreed {
   country_code: string;
   description: string;
   life_span: string;
-  indoor:number;
+  indoor: number;
   lap: number;
   alt_names: string;
   adaptability: number;

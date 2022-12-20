@@ -11,10 +11,9 @@ export class HealthCheckFactory {
   /**
    * Register the service for health check
    */
-  public registerService<
-    ServiceType extends IHealthCheckService<HealthCheckResponseType>,
-    HealthCheckResponseType extends HealthCheckResponse
-  >(service: ServiceType): void {
+  public registerService<ServiceType extends IHealthCheckService<HealthCheckResponseType>, HealthCheckResponseType extends HealthCheckResponse>(
+    service: ServiceType
+  ): void {
     if (!this.servicesToCheck.has(service)) {
       this.logger.log(`HealthCheck => ${service.getServiceName()}`);
       this.servicesToCheck.add(service);

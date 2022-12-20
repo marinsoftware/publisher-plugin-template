@@ -8,9 +8,7 @@ describe('CatsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        HealthModule,
-      ],
+      imports: [HealthModule],
       controllers: [CatsController],
       providers: [CatsService],
     }).compile();

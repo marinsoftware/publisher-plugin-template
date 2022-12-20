@@ -4,7 +4,6 @@ import { CreateShibe } from './models/create-shibe.model';
 import { Shibe } from './schemas/shibe.schema';
 import { ApiResponse } from '@nestjs/swagger';
 
-
 @Controller('shibe')
 export class ShibeController {
   constructor(private readonly shibeService: ShibeService) {}

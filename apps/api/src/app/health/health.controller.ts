@@ -5,10 +5,7 @@ import { HealthCheckFactory, HealthCheckResults } from './health-check.factory';
 
 @Controller()
 export class HealthController {
-  constructor(
-    protected versionService: VersionService,
-    protected healthCheckFactory: HealthCheckFactory
-  ) {}
+  constructor(protected versionService: VersionService, protected healthCheckFactory: HealthCheckFactory) {}
 
   @Get(`status/${contextService.getApplicationName()}/:level`)
   async check(@Param('level') level: HealthCheck) {
@@ -57,9 +54,7 @@ export class HealthController {
       versionHealthCheck.error = err;
     }
 
-    const healthChecks = await this.healthCheckFactory.performHealthChecks(
-      HealthCheck.L2
-    );
+    const healthChecks = await this.healthCheckFactory.performHealthChecks(HealthCheck.L2);
     healthChecks['versionHealthCheck'] = versionHealthCheck;
     // Return the result of the check
     return {
@@ -73,9 +68,7 @@ export class HealthController {
    * Get the level 2 health check
    */
   public async getHealthCheckL3(): Promise<HealthCheckResponseResults> {
-    const healthChecks = await this.healthCheckFactory.performHealthChecks(
-      HealthCheck.L3
-    );
+    const healthChecks = await this.healthCheckFactory.performHealthChecks(HealthCheck.L3);
 
     // Return the result of the check
     return {

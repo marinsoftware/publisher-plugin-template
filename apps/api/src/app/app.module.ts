@@ -30,8 +30,8 @@ import { LoggerModule } from '@libs/logger';
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: TimeoutInterceptor
-    }
+      useClass: TimeoutInterceptor,
+    },
   ],
 })
 export class AppModule {

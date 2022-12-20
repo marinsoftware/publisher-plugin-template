@@ -14,11 +14,7 @@ async function bootstrap() {
   marinLogger.setContext(contextService.getApplicationName());
   app.useLogger(marinLogger);
 
-  const config = new DocumentBuilder()
-    .setTitle('Cats')
-    .setDescription('Cats API')
-    .setVersion('1.0')
-    .build();
+  const config = new DocumentBuilder().setTitle('Cats').setDescription('Cats API').setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   const port = process.env.PORT || 3333;

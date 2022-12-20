@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Shibe, ShibeSchema } from './schemas/shibe.schema';
 import { HttpModule } from '@nestjs/axios';
 
-
 @Module({
   controllers: [ShibeController],
   providers: [ShibeService],
