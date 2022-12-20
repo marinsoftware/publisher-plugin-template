@@ -26,10 +26,9 @@ describe('health-check.factory', () => {
     const healthCheck = await factory.performHealthChecks('L1');
     expect(service.healthCheck).toHaveBeenCalledWith('L1');
     expect(healthCheck).toEqual({
-      'serviceName': {
+      serviceName: {
         healthy: true,
       },
     });
   });
-
 });

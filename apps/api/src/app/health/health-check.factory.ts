@@ -11,7 +11,10 @@ export class HealthCheckFactory {
   /**
    * Register the service for health check
    */
-  public registerService<ServiceType extends IHealthCheckService<HealthCheckResponseType>, HealthCheckResponseType extends HealthCheckResponse>(service: ServiceType): void {
+  public registerService<
+    ServiceType extends IHealthCheckService<HealthCheckResponseType>,
+    HealthCheckResponseType extends HealthCheckResponse
+  >(service: ServiceType): void {
     if (!this.servicesToCheck.has(service)) {
       this.logger.log(`HealthCheck => ${service.getServiceName()}`);
       this.servicesToCheck.add(service);
@@ -24,7 +27,7 @@ export class HealthCheckFactory {
   public async performHealthChecks(level: string): Promise<HealthCheckResults> {
     const result = {};
 
-    for(const service of this.servicesToCheck) {
+    for (const service of this.servicesToCheck) {
       result[service.getServiceName()] = await service.healthCheck(level);
     }
 
@@ -39,6 +42,6 @@ export class HealthCheckFactory {
   }
 }
 
-type HealthCheckResults = {
+export interface HealthCheckResults {
   [key: string]: HealthCheckResponse;
 }

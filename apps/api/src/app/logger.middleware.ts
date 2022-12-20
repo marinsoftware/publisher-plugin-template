@@ -1,9 +1,8 @@
-import { Response, NextFunction } from 'express';
-import { RequestCustom } from './models/request-details.interface';
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { NextFunction, Response } from 'express';
 import * as os from 'os';
-import _ = require('lodash');
 import { LogObject } from './models/log-object.model';
+import { RequestCustom } from './models/request-details.interface';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
