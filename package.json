@@ -8,7 +8,7 @@
     "restart": "pm2 restart $npm_package_config_pm2config --only api",
     "start-dev": "nx serve api | pino-pretty",
     "build": "rm -rf dist/ && nx build",
-    "test": "nx test --coverage --colors --reporters=jest-junit",
+    "test": "nx run-many --all --target=test --coverage --colors --reporters=jest-junit",
     "test-dev": "nx test --coverage --colors",
     "clear_jest": "jest --clearCache",
     "pm2-update": "pm2 update",
