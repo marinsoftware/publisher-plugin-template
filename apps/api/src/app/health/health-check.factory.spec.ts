@@ -9,13 +9,12 @@ describe('health-check.factory', () => {
   beforeEach(() => {
     factory = new HealthCheckFactory(new MarinLogger({} as any));
     service = {
-      getServiceName: () => 'serviceName',
       healthCheck: jest.fn().mockResolvedValue({
         healthy: true,
       }),
     };
 
-    factory.registerService(service);
+    factory.registerService('serviceName', service);
   });
 
   it('services to be registered', () => {
