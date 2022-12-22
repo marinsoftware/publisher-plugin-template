@@ -37,8 +37,11 @@ export class HealthModule implements OnModuleInit {
     // then register it with the health check factory
     providers
       .filter((provider) => this.filterHealthCheckProvider(provider))
-      .map((provider) => provider.instance)
-      .forEach((healthService) => this.healthCheckFactory.registerService(healthService));
+      .map((provider) => ({
+        serviceName: Reflect.getMetadata(HEALTH_CHECK_SERVICE_META_KEY, provider.metatype),
+        instance: provider.instance
+      }))
+      .forEach((healthService) => this.healthCheckFactory.registerService(healthService.serviceName, healthService.instance));
   }
 
   /**

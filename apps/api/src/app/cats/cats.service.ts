@@ -7,18 +7,11 @@ import { CreateCatDto } from './models/create-cat.dto';
 import { UpdateCatDto } from './models/update-cat.dto';
 
 @Injectable()
-@HealthCheckService()
+@HealthCheckService('CatsService')
 export class CatsService implements IHealthCheckService {
   cats: Cat[];
   constructor() {
     this.cats = CatsJson;
-  }
-
-  /**
-   * Get the service name
-   */
-  public getServiceName(): string {
-    return 'CatsService';
   }
 
   /**
@@ -28,14 +21,14 @@ export class CatsService implements IHealthCheckService {
     if (level === 'L2') {
       return {
         healthy: true,
-        message: `Successfully connected to ${this.getServiceName()} at `,
+        message: `Successfully connected to CatsService at `,
         stack: '',
       };
     }
     if (level === 'L3') {
       return {
         healthy: true,
-        message: `Successfully connected to ${this.getServiceName()} and performed a read/write operation`,
+        message: `Successfully connected to CatsService and performed a read/write operation`,
         stack: '',
       };
     }
