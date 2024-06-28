@@ -13,16 +13,6 @@
     "clear_jest": "jest --clearCache",
     "pm2-update": "pm2 update"
   },
-  "jest-junit": {
-    "suiteName": "marin-amazon-api-pg-service",
-    "outputDirectory": "./target",
-    "outputName": "junit.xml",
-    "uniqueOutputName": "false",
-    "classNameTemplate": "{classname}-{title}",
-    "titleTemplate": "{classname}-{title}",
-    "ancestorSeparator": " › ",
-    "usePathForSuiteName": "true"
-  },
   "config": {
     "pm2config": "pm2.json"
   },
