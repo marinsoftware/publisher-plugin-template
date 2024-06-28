@@ -28,6 +28,13 @@ Run `nx build my-app` to build the project. The build artifacts will be stored i
 
 ## Running unit tests
 
+Add publisher service repo name in suitname in package.json file for jest
+example
+"jest-junit": {
+    "suiteName": "marin-amazon-api-pg-service",
+   ...
+  },
+
 Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
 
 Run `nx affected:test` to execute the unit tests affected by a change.
