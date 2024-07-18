@@ -1,5 +1,5 @@
 import {Controller, Get, Post, Body, Query, Put, Delete, HttpException, HttpStatus, Logger} from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { transformPublisherCampaign, transformMarinCampaign } from "../transformers/object-transformer";
 import { PublisherApiService } from "../services/publisher_api.service";
 import { PublisherUtil } from "../services/publisher_utils.service"
@@ -18,6 +18,9 @@ export class CampaignController {
     description: 'All Campaigns within advertiser',
     isArray: true
   })
+  @ApiQuery({ name: 'campaignId', required: false })
+  @ApiQuery({ name: 'publisherName', required: false })
+  @ApiQuery({ name: 'publisherId', required: false })
   async get(@Query('accountId') accountId: number, @Query('refreshToken') token: string, @Query('publisherId') publisherId?: number,@Query('publisherName') publisherName?: string, @Query('campaignId') campaignId?: number) {
     let access_token: string;
     // according to publisher modify publisherUtil.refreshAccessToken
