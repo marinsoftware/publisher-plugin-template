@@ -51,22 +51,8 @@ export class SnapshotController {
     reportRequestParams = this.snapshotService.getReportParams(reportType, reportMetrics);
     reportRequestParams["startTime"] = startDate
     reportRequestParams["endTime"] = endDate
-    const campaignResponseList = await this.campaigncontroller.get(accountId, refreshToken);
-    reportRes = await this.publisherService.getAdAnalyticsResponse(campaignResponseList, reportRequestParams, accountId, access_token, reportType);
-    let searchTermReportUrl: string;
-    if (reportType == ReportType.KEYWORD){
-      if (reportId){
-        null;
-      }
-      const postSnapshotRes: any = await this.publisherService.postSnapshotReport( accountId, access_token, startDate);
-      reportId = postSnapshotRes.data.id
-      const downloadSnapshotRes: any = await this.publisherService.getSnapshotUrl( accountId, access_token, reportId);
-      if (downloadSnapshotRes.data.status != 'COMPLETED'){
-        return { reportId: reportId };
-      }
-      searchTermReportUrl = downloadSnapshotRes.data.downloadUri
-    }
-    const reportObjs$ = await this.snapshotService.processReportByReportType(reportRes, reportType, accountId, searchTermReportUrl)
+    reportRes = await this.publisherService.getAdAnalyticsResponse(reportRequestParams, accountId, access_token, reportType);
+    const reportObjs$ = await this.snapshotService.processReportByReportType(reportRes, reportType, accountId)
 
     return { data: reportObjs$ };
   }

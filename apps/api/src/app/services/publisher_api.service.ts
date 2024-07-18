@@ -404,40 +404,24 @@ export class PublisherApiService {
   }
 
 
-  async getAdAnalyticsResponse(campaignobjList, requestParams, accountId, access_token, reportType){
-      let reportRes = [];
-      for (let index = 0; index < campaignobjList.length; index++){
-        let response:any = await this.getSnapshot(accountId, access_token, requestParams, campaignobjList[index], reportType);
-        if ("data" in response){
-          reportRes.push(...response['data']['reportingDataResponse']['row']);
-        }
-      }
-      return reportRes
+  async getAdAnalyticsResponse(requestParams, accountId, access_token, reportType){
+      const response:any = await this.getSnapshot(accountId, access_token, requestParams, reportType);
+      return response
   }
 
 
-  async getSnapshot(advertiserId: number, access_token: string, requestParams, campaignobj, reportType) {
+  async getSnapshot(advertiserId: number, access_token: string, requestParams, reportType) {
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}reports/campaigns/${campaignobj.id}/adgroups`,
+      baseURL: `${this.apiUrl}reports/${reportType}`,
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${advertiserId}`
       },
       data: requestParams
     }
-    if (reportType == "creative"){
-      options.baseURL = `${this.apiUrl}reports/campaigns/${campaignobj.id}/ads`
-    } else if (reportType == "keyword"){
-      options.baseURL = `${this.apiUrl}reports/campaigns/${campaignobj.id}/keywords`
-    }
-    try {
-      const response = await this.makeHttpCall(options);
-      return response;
-    } catch(error){
-      return []
-    }
+    const response = await this.makeHttpCall(options);
+    return response;
   }
 
   async postSnapshotReport(advertiserId: number, access_token: string, startDate) {
