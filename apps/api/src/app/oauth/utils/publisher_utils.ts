@@ -25,7 +25,7 @@ export class PublisherUtil {
       "client_secret": this.secret,
       "grant_type": "authorization_code",
       "code": code,
-      "redirect_uri": serviceType == "PG" ? config.REDIRECT_URI_JUSTADS : config.REDIRECT_V1_URI_JUSTADS
+      "redirect_uri":config.REDIRECT_URI
     };
     let axios_config = {
       method: 'POST',
@@ -47,7 +47,6 @@ export class PublisherUtil {
     };
     const response_accounts: any = await remote_get(axios_config);
     const accounts = JSON.parse(response_accounts);
-    console.log("accounts", accounts);
     if (accounts && 'data' in accounts){
       for(const account of accounts['data']) {
         if (account['orgId'] == account_id){
