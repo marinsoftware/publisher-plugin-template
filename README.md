@@ -86,6 +86,28 @@ npm run test-dev
 ```
 
 
+## EXAMPLE TO SETUP PINTEREST APP
+# To interact with any publisher advertiser api we need to create a developer app
+
+
+Create a Pinterest app by following guidance
+1. Log into www.pinterest.com with the account that you’ll use to manage your apps
+2. Go to My Apps
+3. Select Connect app and complete our request form with your app information
+4. Submit your request to get Trial access
+
+For More Details follow the guidance url to setup developer app
+    https://developers.pinterest.com/docs/getting-started/set-up-app/#operation/terms_of_service/get
+
+After Creating your app you can see your app under My apps
+    ![Developer App](https://decodermind.com/static/img/pinterest.png)
+
+1. Click on your app and get APP_Id, APP_SECRET and other information.
+2. Save these in .env file. (These env variable will be available across all app, Developer needs to import these var in config file and use them to communicate with pinterest Api)
+3. Redirect Url in app indicates where should pinterest api send response against client cridentials provided in request for oauth2 process
+
+
+
 ## Environment Variables
 
 use env.properties inside conf folder at the root of the project, you can add your variables there along with there default values:
@@ -95,22 +117,41 @@ use env.properties inside conf folder at the root of the project, you can add yo
 PORT=3333
 
 # To set the publisher social Auth settings. To create new publisher app go to section below TABOOLA APP SETUP
-AUTH_BASE_URL="PUBLISHER AUTH URL"
-ADS_BASE_URL="publisher API BASE URL"
 REDIRECT_URI="REDIRECT URL TO YOUR CLIENT PORTAL"
 APP_ID="PUBLISHER APP ID"
 SECRET_ADS="PUBLISHER APP SECRET"
-HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
 ```
+
+# Setup environment/environment.ts file
+# For any urls wich will remain static in any env we add these credentials here
+AUTH_BASE_URL="PUBLISHER AUTH URL"
+ADS_BASE_URL="publisher API BASE URL"
+HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
+
+### Linking Endpoints
+1 `GET /api/publishers` - get list of all publisher\
+2 `POST /api/oauth` - get oauth url against publisher details provided in req body\
+3 `POST /api/publisherAccounts` - get accounts against publisher details provided in req body\
+
+First endpoint is to fetch publisher information.
+  This inforrmation contains publisher DB Id, name, publisher fields for UI and field types
+
+Second endpoint is to create oauth url.
+  Marin send request to this endpoint to retrieve the oauth url on which end users can perform the login and authenticate the account so marin can have the refresh token
+
+Third endpoint is to have the refresh token.
+  Marin send request to this endpoint to retrieve the refrresh toen, access token, account id.
+  This api performs two http request
+  First to retrieve the token (refresh,access)
+  Second to retrieve publisher account information for which user has authenticated
+  Send the informaton in a marin accepting format
+
 
 ### API Endpoints
 
 List of available routes:
 
 **Publisher routes**:\
-`GET /api/publishers` - get list of all publisher\
-`POST /api/oauth` - get oauth url against publisher details provided in req body\
-`POST /api/publisherAccounts` - get accounts against publisher details provided in req body\
 `GET /api/campaigns` - Get All Campaigns\
 `GET /api/groups` - Get All Groups\
 `GET /api/ads` - Get All Ads\
