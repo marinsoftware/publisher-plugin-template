@@ -82,6 +82,7 @@ Testing:
 ```bash
 # run all tests
 npm run test
+npm run test-dev
 ```
 
 
