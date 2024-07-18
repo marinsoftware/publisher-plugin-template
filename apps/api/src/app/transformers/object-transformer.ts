@@ -1,7 +1,7 @@
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { WalmartCampaign, WalmartAdItem, PublisherKeyword, WalmartShoppingProduct, PublisherAdGroup, } from "../models/walmart-objects";
+import { PublisherCampaign, PublisherAdItem, PublisherKeyword, PublisherShoppingProduct, PublisherAdGroup, } from "../models/publisher-objects";
 
-function transformWalmartCampaign(publisherCampaigns): MarinSingleObj[] {
+function transformPublisherCampaign(publisherCampaigns): MarinSingleObj[] {
   const allMarinCampaigns: MarinSingleObj[] = [];
   if (publisherCampaigns){
     publisherCampaigns.forEach(publisherCampaign => {
@@ -87,7 +87,6 @@ function transformWalmartCampaign(publisherCampaigns): MarinSingleObj[] {
         property = {name: "publisher_campaign_type", value: publisherCampaign.adChannelType};
         marinCampaign.properties.push(property)
       }
-      // need confirmation from product manager for targetting type list
       if (publisherCampaign.supplySources) {
         property = {
           name: "targeting_type",
@@ -95,43 +94,17 @@ function transformWalmartCampaign(publisherCampaigns): MarinSingleObj[] {
         };
         marinCampaign.properties.push(property)
       }
-
-      //End
-      // switch (walmartCampaign.budgetType.toLowerCase()) {
-      //   case 'total':
-      //     property = { name: "budget_type", value: 'TOTAL' };
-      //     marinCampaign.properties.push(property)
-      //     break;
-      //   case 'both':
-      //     property = { name: "budget_type", value: 'BOTH' };
-      //     marinCampaign.properties.push(property)
-      //     break;
-      //   case 'daily':
-      //     property = { name: "budget_type", value: 'DAILY' };
-      //     marinCampaign.properties.push(property)
-      //     break;
-      // }
-
-      // if (walmartCampaign.rollover) {
-      //   property = {name: "rollover", value: walmartCampaign.rollover.toString()};
-      //   marinCampaign.properties.push(property)
-      // }
       allMarinCampaigns.push(marinCampaign);
     })
   }
-  // needed for pubgateway functionality
-  // const dummyMarinCampaign = <MarinSingleObj>{};
-  // dummyMarinCampaign.parentId = accountId.toString();
-  // dummyMarinCampaign.id = accountId.toString();
-  // allMarinCampaigns.push(dummyMarinCampaign)
   return allMarinCampaigns;
 }
 
 
-function transformMarinCampaign(marinCampaign: MarinSingleObj[], requestType: string): WalmartCampaign[] {
-  const allCampaigns: WalmartCampaign[] = [];
+function transformMarinCampaign(marinCampaign: MarinSingleObj[], requestType: string): PublisherCampaign[] {
+  const allCampaigns: PublisherCampaign[] = [];
   marinCampaign.forEach(campaign => {
-    const publisherCampaign = <WalmartCampaign>{};
+    const publisherCampaign = <PublisherCampaign>{};
     publisherCampaign.name = campaign.name;
     if ((requestType == 'put' || requestType == 'delete') && campaign.id) {
       publisherCampaign.id = Number(campaign.id);
@@ -199,14 +172,14 @@ function transformMarinCampaign(marinCampaign: MarinSingleObj[], requestType: st
   return allCampaigns;
 }
 
-function transformWalmartCampaignForDelete(marinCampaign: MarinSingleObj[]): WalmartCampaign[] {
-  const allCampaigns: WalmartCampaign[] = [];
+function transformPublisherCampaignForDelete(marinCampaign: MarinSingleObj[]): PublisherCampaign[] {
+  const allCampaigns: PublisherCampaign[] = [];
   marinCampaign.forEach(campaign => {
-    const walmartCampaign = <WalmartCampaign>{};
+    const publisherCampaign = <PublisherCampaign>{};
     if (campaign.id) {
-      walmartCampaign.id = Number(campaign.id);
+      publisherCampaign.id = Number(campaign.id);
     }
-    allCampaigns.push(walmartCampaign);
+    allCampaigns.push(publisherCampaign);
   })
   return allCampaigns;
 }
@@ -256,11 +229,6 @@ function transformPublisherAdGroup(publisherAdGroup, accountId: number) : MarinS
       marinAdGroups.push(marinAdGroup);
     })
   }
-  // const dummyMarinAdGroup = <MarinSingleObj>{};
-  // dummyMarinAdGroup.parentId = accountId.toString();
-  // dummyMarinAdGroup.id = accountId.toString();
-
-  // marinAdGroups.push(dummyMarinAdGroup);
   return marinAdGroups;
 }
 
@@ -351,7 +319,7 @@ function transformMarinAdgroup(marinAdGroups: MarinSingleObj[], requestType: str
   return allAdgroups;
 }
 
-function transformWalmartAdItems(publisherAdItems) : MarinSingleObj[] {
+function transformPublisherAdItems(publisherAdItems) : MarinSingleObj[] {
 
   const marinAdItemsArray = []
   if (publisherAdItems){
@@ -389,49 +357,49 @@ function transformWalmartAdItems(publisherAdItems) : MarinSingleObj[] {
   return marinAdItemsArray;
 }
 
-function transformMarinAdItems(marinAdItems: MarinSingleObj[], requestType?:string): WalmartAdItem[] {
-  const allCampaigns: WalmartAdItem[] = [];
+function transformMarinAdItems(marinAdItems: MarinSingleObj[], requestType?:string): PublisherAdItem[] {
+  const allCampaigns: PublisherAdItem[] = [];
   marinAdItems.forEach(marinAdItem => {
-    const walmartAdItems = <WalmartAdItem>{};
-    walmartAdItems.adGroupId = Number(marinAdItem.parentId);
-    walmartAdItems.name = marinAdItem.name;
-    walmartAdItems.status = marinAdItem.status;
-    switch (walmartAdItems.status.toUpperCase()) {
+    const publisherAdItems = <PublisherAdItem>{};
+    publisherAdItems.adGroupId = Number(marinAdItem.parentId);
+    publisherAdItems.name = marinAdItem.name;
+    publisherAdItems.status = marinAdItem.status;
+    switch (publisherAdItems.status.toUpperCase()) {
       case 'ACTIVE':
-        walmartAdItems.status = 'ENABLED';
+        publisherAdItems.status = 'ENABLED';
         break;
       case 'PAUSED':
-        walmartAdItems.status = 'PAUSED';
+        publisherAdItems.status = 'PAUSED';
         break;
     }
     if (marinAdItem.id != undefined) {
-      walmartAdItems.id = String(marinAdItem.id);
+      publisherAdItems.id = String(marinAdItem.id);
     }
     marinAdItem.properties.forEach(property => {
       switch (property.name) {
         case 'ad_creative_id':
-          walmartAdItems.creativeId = Number(property.value);
+          publisherAdItems.creativeId = Number(property.value);
           break;
       }
     })
     
-    allCampaigns.push(walmartAdItems);
+    allCampaigns.push(publisherAdItems);
   })
   return allCampaigns
 }
 
-function transformWalmartKeywords(walmartKeywords: PublisherKeyword[]) : MarinSingleObj[] {
+function transformPublsherKeywords(publisherKeywords: PublisherKeyword[]) : MarinSingleObj[] {
   const allMarinKeywords: MarinSingleObj[] = [];
 
-  walmartKeywords.forEach(walmartKeyword => {
+  publisherKeywords.forEach(publisherKeyword => {
 
     const marinKeyword = <MarinSingleObj>{};
-    if (walmartKeyword.adGroupId) {
-      marinKeyword.parentId = walmartKeyword.adGroupId.toString();
+    if (publisherKeyword.adGroupId) {
+      marinKeyword.parentId = publisherKeyword.adGroupId.toString();
     }
-    marinKeyword.name = walmartKeyword.text;
-    if (walmartKeyword.status) {
-      switch (walmartKeyword.status.toLowerCase()) {
+    marinKeyword.name = publisherKeyword.text;
+    if (publisherKeyword.status) {
+      switch (publisherKeyword.status.toLowerCase()) {
         case 'live':
         case 'enabled':
           marinKeyword.status = 'ACTIVE';
@@ -444,28 +412,23 @@ function transformWalmartKeywords(walmartKeywords: PublisherKeyword[]) : MarinSi
           break;
       }
     }
-    if (walmartKeyword.id != undefined) {
-      marinKeyword.id = walmartKeyword.id.toString();
+    if (publisherKeyword.id != undefined) {
+      marinKeyword.id = publisherKeyword.id.toString();
     }
     marinKeyword.properties = [];
     let property;
-    if (walmartKeyword.bidAmount && walmartKeyword.bidAmount.amount) {
-      property = {name: "max_cpc", value: walmartKeyword.bidAmount.amount.toString()};
+    if (publisherKeyword.bidAmount && publisherKeyword.bidAmount.amount) {
+      property = {name: "max_cpc", value: publisherKeyword.bidAmount.amount.toString()};
       marinKeyword.properties.push(property)
     }
-    if (walmartKeyword.matchType) {
-      property = {name: "match_type", value: walmartKeyword.matchType.toUpperCase()};
+    if (publisherKeyword.matchType) {
+      property = {name: "match_type", value: publisherKeyword.matchType.toUpperCase()};
       marinKeyword.properties.push(property)
     }
-    if (walmartKeyword.status) {
-      property = {name: "review_status", value: walmartKeyword.status};
+    if (publisherKeyword.status) {
+      property = {name: "review_status", value: publisherKeyword.status};
       marinKeyword.properties.push(property)
     }
-    //TODO pubGateway notincluded fields
-    // if (walmartKeyword.campaignId) {
-    //   property = {name: "campaignId", value: walmartKeyword.campaignId.toString()};
-    //   marinKeyword.properties.push(property)
-    // }
     allMarinKeywords.push(marinKeyword);
   });
 
@@ -475,67 +438,67 @@ function transformWalmartKeywords(walmartKeywords: PublisherKeyword[]) : MarinSi
 function transformMarinKeywords(marinKeyword: MarinSingleObj[], requestType?:string): PublisherKeyword[] {
   const allKeywords: PublisherKeyword[] = [];
   marinKeyword.forEach(keyword => {
-    const walmartKeyword = <PublisherKeyword>{};
-    walmartKeyword.text = keyword.name;
+    const publisherKeyword = <PublisherKeyword>{};
+    publisherKeyword.text = keyword.name;
     switch (keyword.status) {
       case 'ACTIVE':
-        walmartKeyword.status = 'ACTIVE';
+        publisherKeyword.status = 'ACTIVE';
         break;
       case 'PAUSED':
-        walmartKeyword.status = 'PAUSED';
+        publisherKeyword.status = 'PAUSED';
         break;
       case 'DELETED':
-        walmartKeyword.status = 'DELETED';
+        publisherKeyword.status = 'DELETED';
         break;
     }
     if (keyword.id) {
-      walmartKeyword.id = Number(keyword.id);
+      publisherKeyword.id = Number(keyword.id);
     }
-    walmartKeyword.adGroupId = Number(keyword.parentId);
+    publisherKeyword.adGroupId = Number(keyword.parentId);
     keyword.properties.forEach(property => {
       switch (property.name) {
         case 'max_cpc':
-          walmartKeyword.bidAmount = {'amount': String(property.value), 'currency': 'USD'};
+          publisherKeyword.bidAmount = {'amount': String(property.value), 'currency': 'USD'};
           break;
         case 'match_type':
           if (property.value) {
-            walmartKeyword.matchType = property.value.toUpperCase();
+            publisherKeyword.matchType = property.value.toUpperCase();
             break;
           }
 
         // case 'campaignId':
-        //   walmartKeyword.campaignId = Number(property.value);
+        //   publisherKeyword.campaignId = Number(property.value);
         //   break;
       }
     })
-    allKeywords.push(walmartKeyword);
+    allKeywords.push(publisherKeyword);
   })
   return allKeywords;
 }
 
-function transformWalmartShoppingProducts(walmartShoppingProducts: WalmartShoppingProduct[], accountId: number) : MarinSingleObj[] {
+function transformPublisherShoppingProducts(publisherShoppingProducts: PublisherShoppingProduct[], accountId: number) : MarinSingleObj[] {
   const marinShoppingProducts = []
-  walmartShoppingProducts.forEach(walmartShoppingProduct => {
+  publisherShoppingProducts.forEach(publisherShoppingProduct => {
     const marinShoppingProduct = <MarinSingleObj>{};
-    marinShoppingProduct.name = walmartShoppingProduct.itemName;
+    marinShoppingProduct.name = publisherShoppingProduct.itemName;
     marinShoppingProduct.properties = [];
     let property;
     marinShoppingProduct.parentId = accountId.toString();
-    if (walmartShoppingProduct.itemId) {
-      property = {name: "sku", value: walmartShoppingProduct.itemId};
-      marinShoppingProduct.id = walmartShoppingProduct.itemId;
+    if (publisherShoppingProduct.itemId) {
+      property = {name: "sku", value: publisherShoppingProduct.itemId};
+      marinShoppingProduct.id = publisherShoppingProduct.itemId;
       marinShoppingProduct.properties.push(property)
     }
-    if (walmartShoppingProduct.itemImageUrl) {
-      property = {name: "image_url", value: walmartShoppingProduct.itemImageUrl};
+    if (publisherShoppingProduct.itemImageUrl) {
+      property = {name: "image_url", value: publisherShoppingProduct.itemImageUrl};
       marinShoppingProduct.properties.push(property)
     }
-    if (walmartShoppingProduct.itemId) {
-      property = {name: "destination_url", value: walmartShoppingProduct.itemPageUrl};
+    if (publisherShoppingProduct.itemId) {
+      property = {name: "destination_url", value: publisherShoppingProduct.itemPageUrl};
       marinShoppingProduct.properties.push(property)
     }
-    if (walmartShoppingProduct.suggestedBid) {
-      property = {name: "suggested_cpc", value: walmartShoppingProduct.suggestedBid.toString()};
+    if (publisherShoppingProduct.suggestedBid) {
+      property = {name: "suggested_cpc", value: publisherShoppingProduct.suggestedBid.toString()};
       marinShoppingProduct.properties.push(property)
     }
     marinShoppingProducts.push(marinShoppingProduct);
@@ -549,32 +512,32 @@ function transformWalmartShoppingProducts(walmartShoppingProducts: WalmartShoppi
   return marinShoppingProducts;
 }
 
-function transformMarinShoppingProducts(marinShoppingProducts: MarinSingleObj[]): WalmartShoppingProduct[] {
-  const listShoppingProducts: WalmartShoppingProduct[] = [];
+function transformMarinShoppingProducts(marinShoppingProducts: MarinSingleObj[]): PublisherShoppingProduct[] {
+  const listShoppingProducts: PublisherShoppingProduct[] = [];
   marinShoppingProducts.forEach(marinShoppingProduct => {
-    const walmartShoppingProduct = <WalmartShoppingProduct>{};
-    walmartShoppingProduct.itemId = marinShoppingProduct.name;
+    const publisherShoppingProduct = <PublisherShoppingProduct>{};
+    publisherShoppingProduct.itemId = marinShoppingProduct.name;
     marinShoppingProduct.properties.forEach(property => {
       switch (property.name) {
         case 'sku':
-          walmartShoppingProduct.itemId = property.value;
+          publisherShoppingProduct.itemId = property.value;
           break;
         case 'image_url':
-          walmartShoppingProduct.itemImageUrl = property.value;
+          publisherShoppingProduct.itemImageUrl = property.value;
           break;
         case 'destination_url':
-          walmartShoppingProduct.itemImageUrl = property.value;
+          publisherShoppingProduct.itemImageUrl = property.value;
           break;
         case 'suggested_cpc':
-          walmartShoppingProduct.suggestedBid = Number(property.value);
+          publisherShoppingProduct.suggestedBid = Number(property.value);
           break;
       }
     })
 
-    listShoppingProducts.push(walmartShoppingProduct);
+    listShoppingProducts.push(publisherShoppingProduct);
   })
 
   return listShoppingProducts;
 }
 
-export { transformWalmartShoppingProducts, transformMarinShoppingProducts, transformMarinKeywords, transformWalmartKeywords, transformWalmartAdItems, transformMarinAdItems, transformPublisherAdGroup, transformMarinAdgroup , transformWalmartCampaign, transformMarinCampaign, transformWalmartCampaignForDelete, transformPublisherkeywords }
+export { transformPublisherShoppingProducts, transformMarinShoppingProducts, transformMarinKeywords, transformPublsherKeywords, transformPublisherAdItems, transformMarinAdItems, transformPublisherAdGroup, transformMarinAdgroup , transformPublisherCampaign, transformMarinCampaign, transformPublisherCampaignForDelete, transformPublisherkeywords }

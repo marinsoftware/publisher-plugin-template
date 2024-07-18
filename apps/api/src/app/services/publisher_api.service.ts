@@ -1,19 +1,17 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { MailerService } from '@nestjs-modules/mailer';
 import { AxiosRequestConfig } from "@nestjs/terminus/dist/health-indicator/http/axios.interfaces";
 import { environment } from "../../environments/environment";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const crypto = require('crypto');
-import { transformWalmartAdItems, transformWalmartShoppingProducts } from "../transformers/object-transformer";
+import { transformPublisherAdItems } from "../transformers/object-transformer";
 import {
   MarinFailedResponse,
   MarinResponse,
   MarinSingleObj,
   MarinSingleResponse
 } from "../models/marin-object.interface";
-import { SnapshotRequest } from "../models/snapshot.interface";
-import { PublisherAdGroup, PublisherKeyword, WalmartAdGroup, WalmartAdItem, WalmartCampaign } from "../models/walmart-objects";
+import { PublisherAdGroup, PublisherKeyword, PublishersAdGroup, PublisherAdItem, PublisherCampaign } from "../models/publisher-objects";
 import { forkJoin, map, Observable, retry, lastValueFrom } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import config from "../../../config.helper";
@@ -29,11 +27,6 @@ export class PublisherApiService {
   apiUrlv2: string;
   private authSignature: { timestamp: number, signature: string }
   sendEmailInstance: any;
-  //TODO we need to cache all the results so we dont make additional requests we dont need.
-  // private cachedCampaigns: WalmartCampaign[];
-  // private cachedAdGroups: WalmartAdGroup[];
-  // private cachedAdItems: WalmartAdItems[];
-
   constructor(private httpService: HttpService) {
     this.apiUrl = environment.ADS_BASE_URL;
     this.apiUrlv2 = config.API_URL_V2;
@@ -42,7 +35,7 @@ export class PublisherApiService {
 
   /**
    * Gets all campaigns in the Apple Account
-   * @return {Promise<WalmartCampaign[]>}
+   * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
@@ -71,12 +64,12 @@ export class PublisherApiService {
   }
 
   /**
-   * Gets all campaigns in the Walmart Account
-   * @return {Promise<WalmartCampaign[]>}
+   * Gets all campaigns in the Publisher Account
+   * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
-  getCampaigns(advertiserId : number, campaignId? : number): Observable<WalmartCampaign[]> {
+  getCampaigns(advertiserId : number, campaignId? : number): Observable<PublisherCampaign[]> {
     /*TODO Need to add filtering Feature*/
     const options: AxiosRequestConfig = {
       baseURL: this.apiUrl + 'campaigns',
@@ -92,11 +85,11 @@ export class PublisherApiService {
 
   /**
    * Creates campaigns
-   * @param {WalmartKeyword[]} campaigns
+   * @param {PublisherKeyword[]} campaigns
    * @param {MarinSingleObj[]} marinCampaign
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async createCampaigns(campaigns: WalmartCampaign[], marinCampaign: MarinSingleObj[], accountId, access_token) {
+  async createCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], accountId, access_token) {
     // return this.responseTranslation(this.createObjects('campaign', campaigns), marinCampaign, 'campaign');
     let campaignList = []
     for (let index = 0 ; index < campaigns.length; index++){
@@ -118,7 +111,7 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinCampaign
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  editCampaigns(campaigns: WalmartCampaign[], marinCampaign: MarinSingleObj[]) {
+  editCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[]) {
     return this.responseTranslation(this.editObjects('campaign', campaigns), marinCampaign, 'campaign');
   }
 
@@ -128,7 +121,7 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinCampaign
    * @return  { MarinResponse | MarinFailedResponse} Response
    */
-    async editPublisherCampaigns(campaigns: WalmartCampaign[], marinCampaign: MarinSingleObj[], accountId?:number, access_token?:string) {
+    async editPublisherCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], accountId?:number, access_token?:string) {
       let campaignList = []
       for (let index = 0 ; index < campaigns.length; index++){
         let response;
@@ -148,7 +141,7 @@ export class PublisherApiService {
    * @param campaigns
    * @param {MarinSingleObj[]} marinCampaign
    */
-  async deleteCampaigns(campaigns: WalmartCampaign[], marinCampaign: MarinSingleObj[], access_token, accountId) {
+  async deleteCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], access_token, accountId) {
     let campaignList = []
     for (let index = 0 ; index < campaigns.length; index++){
       let response;
@@ -185,20 +178,20 @@ export class PublisherApiService {
 
   /**
    * Delete keywords
-   * @param { WalmartKeyword[] } walmartKeywords
+   * @param { PublisherKeyword[] } publisherKeywords
    * @param { MarinSingleObj[] } marinKeywords
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async deleteKeywords(walmartKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
+  async deleteKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
     let keywordResponseList = []
-    for (let index=0; index < walmartKeywords.length; index++){
+    for (let index=0; index < publisherKeywords.length; index++){
       const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === walmartKeywords[index].adGroupId;
+        return obj.id === publisherKeywords[index].adGroupId;
       });
       let response;
       try{
-        response = await this.deleteObjects('keywords', access_token, accountId, adgroupObj.campaignId, adgroupObj.id, walmartKeywords[index].id)
-        response['data'] = walmartKeywords[index];
+        response = await this.deleteObjects('keywords', access_token, accountId, adgroupObj.campaignId, adgroupObj.id, publisherKeywords[index].id)
+        response['data'] = publisherKeywords[index];
       }catch(e){
         response = { data: null, pagination: null, error: { errors: e.error } }
       }
@@ -247,34 +240,34 @@ export class PublisherApiService {
 
   responseTranslation(response: Observable<any[]>, marinCampaign: MarinSingleObj[], responseType: string): Observable<MarinResponse | MarinFailedResponse> {
     const final: MarinResponse = { requestResult: '', objects: [] };
-    return response.pipe(map(walmartCampaignResponse => {
+    return response.pipe(map(publisherCampaignResponse => {
       let status = '';
-      for (let i = 0; i < walmartCampaignResponse.length; i++) {
+      for (let i = 0; i < publisherCampaignResponse.length; i++) {
         const currObj: MarinSingleResponse = {details: "", object: undefined, status: ""};
-        if (status == 'Error' && walmartCampaignResponse[i].code == 'success' ||
-          status == 'SUCCESS' && walmartCampaignResponse[i].code == 'failure') {
+        if (status == 'Error' && publisherCampaignResponse[i].code == 'success' ||
+          status == 'SUCCESS' && publisherCampaignResponse[i].code == 'failure') {
           status = 'PARTIAL-SUCCESS'
-        } else if (walmartCampaignResponse[i].code == 'success') {
+        } else if (publisherCampaignResponse[i].code == 'success') {
           status = 'SUCCESS';
         } else {
           status = 'Error';
         }
 
-        if (walmartCampaignResponse[i].code == 'success') {
+        if (publisherCampaignResponse[i].code == 'success') {
           currObj.status = 'SUCCESS';
         } else {
           currObj.status = 'Error';
-          currObj.details = walmartCampaignResponse[i].details;
+          currObj.details = publisherCampaignResponse[i].details;
         }
         currObj.object = marinCampaign[i];
-        if (responseType == 'campaign' && walmartCampaignResponse[i].campaignId != undefined) {
-          marinCampaign[i].id = String(walmartCampaignResponse[i].campaignId)
-        } else if (responseType == 'adGroup' && walmartCampaignResponse[i].adGroupId != undefined) {
-          marinCampaign[i].id = String(walmartCampaignResponse[i].adGroupId)
-        } else if (responseType == 'adItem' && walmartCampaignResponse[i].adItemId != undefined) {
-          marinCampaign[i].id = String(walmartCampaignResponse[i].adItemId)
-        } else if (responseType == 'sba_profile' && walmartCampaignResponse[i].sbaProfileId != undefined && walmartCampaignResponse[i].sbaProfileId != 0) {
-          marinCampaign[i].id = String(walmartCampaignResponse[i].sbaProfileId)
+        if (responseType == 'campaign' && publisherCampaignResponse[i].campaignId != undefined) {
+          marinCampaign[i].id = String(publisherCampaignResponse[i].campaignId)
+        } else if (responseType == 'adGroup' && publisherCampaignResponse[i].adGroupId != undefined) {
+          marinCampaign[i].id = String(publisherCampaignResponse[i].adGroupId)
+        } else if (responseType == 'adItem' && publisherCampaignResponse[i].adItemId != undefined) {
+          marinCampaign[i].id = String(publisherCampaignResponse[i].adItemId)
+        } else if (responseType == 'sba_profile' && publisherCampaignResponse[i].sbaProfileId != undefined && publisherCampaignResponse[i].sbaProfileId != 0) {
+          marinCampaign[i].id = String(publisherCampaignResponse[i].sbaProfileId)
         }
 
         final.objects.push(currObj)
@@ -286,7 +279,7 @@ export class PublisherApiService {
 
   /**
    * Gets adgroups in the Apple Account
-   * @return {Promise<WalmartCampaign[]>}
+   * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
@@ -312,7 +305,7 @@ export class PublisherApiService {
 
   /**
    * Gets adgroups in the Apple Account
-   * @return {Promise<WalmartCampaign[]>}
+   * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
@@ -337,13 +330,13 @@ export class PublisherApiService {
   }
 
   /**
-   * Gets all ad groups in the Walmart Account
-   * @return {Promise<WalmartAdGroup[]>}
+   * Gets all ad groups in the Publisher Account
+   * @return {Promise<PublisherAdGroup[]>}
    * @param advertiserId
    * @param campaignId
    * @param adGroupId
    */
-  getAdGroups(advertiserId : number, campaignId? : number, adGroupId? : number): Observable<WalmartAdGroup[]> {
+  getAdGroups(advertiserId : number, campaignId? : number, adGroupId? : number): Observable<PublishersAdGroup[]> {
     /*TODO Need to add filtering Feature*/
     const options: AxiosRequestConfig = {
       baseURL: this.apiUrl + 'adGroups',
@@ -363,8 +356,8 @@ export class PublisherApiService {
 
 
   /**
-   * Gets keywords in the Apple Account
-   * @return {Promise<WalmartCampaign[]>}
+   * Gets keywords in the Publisher Account
+   * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
@@ -432,19 +425,19 @@ export class PublisherApiService {
 
   /**
    * Creates keywords
-   * @param { WalmartCampaign[] } walmartKeywords
+   * @param { PublisherCampaign[] } publisherKeywords
    * @param { MarinSingleObj[] } marinKeywords
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async createKeywords(walmartKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
+  async createKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
     let keywordResponseList = []
-    for (let index=0; index < walmartKeywords.length; index++){
+    for (let index=0; index < publisherKeywords.length; index++){
       const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === walmartKeywords[index].adGroupId;
+        return obj.id === publisherKeywords[index].adGroupId;
       });
       let response;
       try{
-        response = await this.createObjects('keywords', walmartKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
+        response = await this.createObjects('keywords', publisherKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
       }catch(e){
         response = { data: null, pagination: null, error: { errors: e.message } }
       }
@@ -455,19 +448,19 @@ export class PublisherApiService {
 
   /**
    * Edits keywords
-   * @param { WalmartKeyword[] } walmartKeywords
+   * @param { PublisherKeyword[] } publisherKeywords
    * @param { MarinSingleObj[] } marinKeywords
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async editKeywords(walmartKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
+  async editKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
     let keywordResponseList = []
-    for (let index=0; index < walmartKeywords.length; index++){
+    for (let index=0; index < publisherKeywords.length; index++){
       const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === walmartKeywords[index].adGroupId;
+        return obj.id === publisherKeywords[index].adGroupId;
       });
       let response;
       try{
-        response = await this.editPublisherObjects('keywords', walmartKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
+        response = await this.editPublisherObjects('keywords', publisherKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
       }catch(e){
         response = { data: null, pagination: null, error: { errors: e.error } }
       }
@@ -523,8 +516,8 @@ export class PublisherApiService {
     return adList
 
   }
-  getAdItems(filter?: object, walmartCampaigns?: WalmartCampaign[]) {
-    const observableList = walmartCampaigns.map((data: WalmartCampaign) => {
+  getAdItems(filter?: object, publisherCampaigns?: PublisherCampaign[]) {
+    const observableList = publisherCampaigns.map((data: PublisherCampaign) => {
       if(data.id) {
         const options: AxiosRequestConfig = {
           baseURL: this.apiUrl + 'adItems',
@@ -537,11 +530,11 @@ export class PublisherApiService {
         return this.makeApiCall(options);
       }
     });
-    return forkJoin(observableList).pipe(map(adItems => transformWalmartAdItems(adItems.flat(1))));
+    return forkJoin(observableList).pipe(map(adItems => transformPublisherAdItems(adItems.flat(1))));
   }
 
-  getBrandProfileItems(filter?: object, walmartAdgroups?: WalmartAdGroup[]) {
-    const observableList = walmartAdgroups.map((data: WalmartAdGroup) => {
+  getBrandProfileItems(filter?: object, publisherAdgroups?: PublishersAdGroup[]) {
+    const observableList = publisherAdgroups.map((data: PublishersAdGroup) => {
       if(data.campaignId) {
         const options: AxiosRequestConfig = {
           baseURL: this.apiUrlv2 + 'sba_profile',
@@ -552,16 +545,16 @@ export class PublisherApiService {
         return this.makeApiCall(options);
       }
     });
-    return forkJoin(observableList).pipe(map(adItems => transformWalmartAdItems(adItems.flat(1))));
+    return forkJoin(observableList).pipe(map(adItems => transformPublisherAdItems(adItems.flat(1))));
   }
 
 
   /**
-   * Gets all ad groups in the Walmart Account
-   * @return {Promise<WalmartAdGroup[]>}
+   * Gets all ad groups in the Publisher Account
+   * @return {Promise<PublisherAdGroup[]>}
    * @param campaignId
    */
-  getAdItem(campaignId : number): Observable<WalmartAdItem[]> {
+  getAdItem(campaignId : number): Observable<PublisherAdItem[]> {
     /**
      * TODO Need to add filtering Feature
      */
@@ -577,11 +570,11 @@ export class PublisherApiService {
   }
 
   /**
-   * Gets all ad groups in the Walmart Account
-   * @return {Promise<WalmartAdGroup[]>}
+   * Gets all ad groups in the Publisher Account
+   * @return {Promise<PublisherAdGroup[]>}
    * @param campaignId
    */
-  getSbaProfileItem(campaignId : number, adgroupId : number): Observable<WalmartAdItem[]> {
+  getSbaProfileItem(campaignId : number, adgroupId : number): Observable<PublisherAdItem[]> {
     /**
      * TODO Need to add filtering Feature
      */
@@ -601,7 +594,7 @@ export class PublisherApiService {
    * @param adItems
    * @param marinAdItem
    */
-  async createAdItem(adItems: WalmartAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList:any[], accountId:number, access_token:string) {
+  async createAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList:any[], accountId:number, access_token:string) {
     
     let AdItemResponseList = []
     for (let index=0; index < adItems.length; index++){
@@ -625,7 +618,7 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinAdItem
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async editAdItem(adItems: WalmartAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
+  async editAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
     let AdItemResponseList = []
     for (let index=0; index < adItems.length; index++){
       const adgroupObj = publisherAdgroupList.find((obj) => {
@@ -648,7 +641,7 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinAdItem
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-    async deleteAdItem(adItems: WalmartAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
+    async deleteAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
       let AdItemResponseList = []
       for (let index=0; index < adItems.length; index++){
         const adgroupObj = publisherAdgroupList.find((obj) => {
@@ -787,50 +780,6 @@ export class PublisherApiService {
     return response;
   }
 
-
-  // /**
-  //  * Creates objects
-  //  * @param {string} objectType
-  //  * @param {any[]} objects
-  //  */
-  // createObjects(objectType:string, objects) {
-  //   const endpoint = objectType == 'sba_profile'? objectType : objectType + 's';
-  //   if (Array.isArray(objects) && objects.length > 0) {
-  //     // campaign creation needs advertiserId set
-  //     // if (objectType == 'campaign') {
-  //     //   objects.forEach(function(object) {
-  //     //     object.advertiserId = this.advertiserId
-  //     //   }, this);
-  //     // }
-  //     if (endpoint.includes("campaign")){
-  //       let batch_list = []
-  //       for (let index=0; index < objects.length; index+=environment.batchLimit){
-  //         batch_list.push(objects.slice(index, index+environment.batchLimit))
-  //       }
-  //       const observableList = batch_list.map((data: WalmartCampaign[]) => {
-  //           const options: AxiosRequestConfig = {
-  //             baseURL: objectType == 'sba_profile'? this.apiUrlv2 + endpoint : this.apiUrl + endpoint,
-  //             method: 'POST',
-  //             data: data,
-  //             headers: {},
-  //             params: {}
-  //           };
-  //           return this.makeApiCall(options);
-  //       });
-  //       return forkJoin(observableList).pipe(map(response => response.flat()));
-  //     } else {
-  //       const options: AxiosRequestConfig = {
-  //         method: 'POST',
-  //         baseURL: objectType == 'sba_profile'? this.apiUrlv2 + endpoint : this.apiUrl + endpoint,
-  //         data: objects,
-  //         headers: {},
-  //         params: {}
-  //       }
-  //       return this.makeApiCall(options);
-  //     }
-  //   }
-  // }
-
  /**
    * Edits objects
    * @param objectType
@@ -887,7 +836,7 @@ export class PublisherApiService {
         for (let index=0; index < objects.length; index+=environment.batchLimit){
           batch_list.push(objects.slice(index, index+environment.batchLimit))
         }
-        const observableList = batch_list.map((data: WalmartCampaign[]) => {
+        const observableList = batch_list.map((data: PublisherCampaign[]) => {
             const options: AxiosRequestConfig = {
               baseURL: this.apiUrl + endpoint,
               method: 'POST',
@@ -1031,7 +980,7 @@ export class PublisherApiService {
           data.details = 'Api operations limit breached for 60 Minutes interval';
           this.sendEmailInstance.sendEmail({
             toEmail: [config.LIMIT_BREACHED_EMAIL_TO],
-            subject: 'Walmart API Operations Limit Breached ❌',
+            subject: 'Publisher API Operations Limit Breached ❌',
             textBody: `server ${err.message}. ${data.details}`,
           });
         }
@@ -1042,7 +991,7 @@ export class PublisherApiService {
   }
 
   /**
-   * generate Walmart auth signature
+   * generate Publisher auth signature
    * @private
    * @return {object} auth signature
    */
@@ -1053,7 +1002,7 @@ export class PublisherApiService {
     return {
       timestamp: unix,
       signature: signer.sign(
-         config.API_URL.includes('stg.walmart') ? environment.privateKey :  environment.privateKeyPoduction,
+         config.API_URL.includes('stg.publisher') ? environment.privateKey :  environment.privateKeyPoduction,
         'base64'
       )
     };

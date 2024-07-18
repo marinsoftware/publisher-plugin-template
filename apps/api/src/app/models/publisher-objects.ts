@@ -1,4 +1,4 @@
-export class WalmartCampaign {
+export class PublisherCampaign {
   advertiserId: number;
   id: number;
   displayStatus: string;
@@ -36,7 +36,7 @@ export class PublisherAdGroup {
   startTime: string;
 }
 
-export class WalmartAdGroup {
+export class PublishersAdGroup {
   id: number;
   campaignId: number;
   name: string;
@@ -44,7 +44,7 @@ export class WalmartAdGroup {
   defaultBidAmount: PublisherBudget;
 }
 
-export class WalmartAdItem {
+export class PublisherAdItem {
   campaignId: number;
   adGroupId: number;
   itemId: string;
@@ -56,7 +56,7 @@ export class WalmartAdItem {
 }
 
 
-export class WalmartShoppingProduct {
+export class PublisherShoppingProduct {
   itemId: string;
   itemImageUrl: string;
   itemName: string;
@@ -64,7 +64,7 @@ export class WalmartShoppingProduct {
   suggestedBid: number;
 }
 
-export class WalmartShoppingProductsRequest {
+export class PublisherShoppingProductsRequest {
   advertiserId: number;
   searchText?: string;
   searchItemIds?;

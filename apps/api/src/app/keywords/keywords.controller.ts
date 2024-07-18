@@ -6,13 +6,13 @@ import { transformMarinKeywords, transformPublisherkeywords } from "../transform
 import { MarinSingleObj } from "../models/marin-object.interface";
 import { CampaignController } from "../campaigns/campaign.controller"
 import { AdGroupsController } from "../groups/ad-groups.controller";
-import { PublisherKeyword } from "../models/walmart-objects";
+import { PublisherKeyword } from "../models/publisher-objects";
 
 @Controller('keywords')
 export class KeywordController {
 
   constructor(
-    private readonly walmartService: PublisherApiService,
+    private readonly publisherService: PublisherApiService,
     private readonly publisherUtil: PublisherUtil, 
     private readonly logger: Logger,
     private readonly campaigncontroller: CampaignController,
@@ -43,7 +43,7 @@ export class KeywordController {
       for(const adgroupObj of adgroupResponseList){
         let offset: number = 0;
         do{
-          publisherResponse = await this.walmartService.getPublisherKeywords(accountId, access_token, campaign.id, adgroupObj.id, offset)
+          publisherResponse = await this.publisherService.getPublisherKeywords(accountId, access_token, campaign.id, adgroupObj.id, offset)
           if ((!publisherResponse.data) || (publisherResponse.data.length == 0)){
             break
           }
@@ -73,13 +73,13 @@ export class KeywordController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
-    const walmartKeywords: PublisherKeyword[] = transformMarinKeywords(createDto);
-    return this.walmartService.createKeywords(walmartKeywords, createDto, publisherAdgroupList, accountId, access_token);
+    const publisherKeywords: PublisherKeyword[] = transformMarinKeywords(createDto);
+    return this.publisherService.createKeywords(publisherKeywords, createDto, publisherAdgroupList, accountId, access_token);
   }
 
   @Put()
@@ -100,13 +100,13 @@ export class KeywordController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
     const publisherKeywords: PublisherKeyword[] = transformMarinKeywords(createDto, "put");
-    return this.walmartService.editKeywords(publisherKeywords, createDto, publisherAdgroupList, accountId, access_token);
+    return this.publisherService.editKeywords(publisherKeywords, createDto, publisherAdgroupList, accountId, access_token);
   }
 
   @Delete()
@@ -127,12 +127,12 @@ export class KeywordController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
     const publisherKeywords: PublisherKeyword[] = transformMarinKeywords(createDto, "delete");
-    return this.walmartService.deleteKeywords(publisherKeywords, createDto, publisherAdgroupList, accountId, access_token);
+    return this.publisherService.deleteKeywords(publisherKeywords, createDto, publisherAdgroupList, accountId, access_token);
   }
 }

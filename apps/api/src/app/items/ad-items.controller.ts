@@ -2,16 +2,16 @@ import { PublisherApiService } from "../services/publisher_api.service";
 import { PublisherUtil } from "../services/publisher_utils.service"
 import {Body, Controller, Get, Post, Put, Delete, Query, HttpException, HttpStatus, Logger} from "@nestjs/common";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { transformMarinAdItems, transformWalmartAdItems } from "../transformers/object-transformer";
+import { transformMarinAdItems, transformPublisherAdItems } from "../transformers/object-transformer";
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { WalmartAdItem } from "../models/walmart-objects";
+import { PublisherAdItem } from "../models/publisher-objects";
 import { CampaignController } from "../campaigns/campaign.controller"
 import { AdGroupsController } from "../groups/ad-groups.controller";
 
 @Controller('ads')
 export class AdItemsController {
   constructor(
-    private readonly walmartService: PublisherApiService, 
+    private readonly publisherService: PublisherApiService, 
     private readonly publisherUtil: PublisherUtil, 
     private readonly logger: Logger,
     private readonly campaigncontroller: CampaignController,
@@ -50,7 +50,7 @@ export class AdItemsController {
         default_ad['id']=adgroupObj.id;
         publisherAds.push(...[default_ad]);
         do{
-          publisherResponse = await this.walmartService.getPublisherAdItems(accountId, access_token, campaign.id, adgroupObj.id, offset)
+          publisherResponse = await this.publisherService.getPublisherAdItems(accountId, access_token, campaign.id, adgroupObj.id, offset)
           if ((!publisherResponse.data) || (publisherResponse.data.length == 0)){
             break
           }
@@ -59,7 +59,7 @@ export class AdItemsController {
         } while (offset != publisherResponse.pagination.totalResults)
       }
     }
-    return transformWalmartAdItems(publisherAds)
+    return transformPublisherAdItems(publisherAds)
   }
 
   @Post()
@@ -80,14 +80,14 @@ export class AdItemsController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
 
-    const walmartAdItem: WalmartAdItem[] = transformMarinAdItems(createDto);
-    return this.walmartService.createAdItem(walmartAdItem, createDto, publisherAdgroupList, accountId, access_token);
+    const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(createDto);
+    return this.publisherService.createAdItem(publisherAdItem, createDto, publisherAdgroupList, accountId, access_token);
   }
 
   @Put()
@@ -108,13 +108,13 @@ export class AdItemsController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
-    const walmartAdItem: WalmartAdItem[] = transformMarinAdItems(editAdItems);
-    return this.walmartService.editAdItem(walmartAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
+    const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(editAdItems);
+    return this.publisherService.editAdItem(publisherAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
   }
 
   @Delete()
@@ -135,12 +135,12 @@ export class AdItemsController {
       let offset: number = 0;
       let publisherAdgroupResponse;
       do{
-        publisherAdgroupResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
         offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
         publisherAdgroupList.push(...publisherAdgroupResponse.data);
       } while (offset != publisherAdgroupResponse.pagination.totalResults)
     }
-    const walmartAdItem: WalmartAdItem[] = transformMarinAdItems(editAdItems);
-    return this.walmartService.deleteAdItem(walmartAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
+    const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(editAdItems);
+    return this.publisherService.deleteAdItem(publisherAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
   }
 }

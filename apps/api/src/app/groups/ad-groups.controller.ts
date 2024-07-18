@@ -4,14 +4,14 @@ import {Body, Controller, Get, Post, Put, Delete, Query, HttpException, HttpStat
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { transformMarinAdgroup, transformPublisherAdGroup } from "../transformers/object-transformer";
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { PublisherAdGroup } from "../models/walmart-objects";
+import { PublisherAdGroup } from "../models/publisher-objects";
 import { CampaignController } from "../campaigns/campaign.controller"
 
 @Controller('groups')
 export class AdGroupsController {
 
   constructor(
-    private readonly walmartService: PublisherApiService,
+    private readonly publisherService: PublisherApiService,
     private readonly publisherUtil: PublisherUtil, 
     private readonly logger: Logger,
     private readonly campaigncontroller: CampaignController
@@ -36,7 +36,7 @@ export class AdGroupsController {
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     if(campaignId && adgroupId){
-      publisherResponse = await this.walmartService.getPublisherAdGroup(accountId, access_token, campaignId, adgroupId)
+      publisherResponse = await this.publisherService.getPublisherAdGroup(accountId, access_token, campaignId, adgroupId)
       publisherAdgroup.push(publisherResponse.data)
     }
     else {
@@ -49,7 +49,7 @@ export class AdGroupsController {
       for(const compaign of campaignResponseList){
         let offset: number = 0;
         do{
-          publisherResponse = await this.walmartService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
+          publisherResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
           if ((!publisherResponse.data) || (publisherResponse.data.length == 0)){
             break
           }
@@ -73,9 +73,8 @@ export class AdGroupsController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const walmartAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, "post");
-    console.log("POST request payload after walmartAdGroups", walmartAdGroups);
-    return this.walmartService.createAdGroups(walmartAdGroups, createDto, accountId, access_token);
+    const publisherAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, "post");
+    return this.publisherService.createAdGroups(publisherAdGroups, createDto, accountId, access_token);
   }
 
   @Put()
@@ -90,9 +89,8 @@ export class AdGroupsController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     } 
-    const walmartAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, "put");
-    console.log("PUT request payload after walmartAdGroups", walmartAdGroups);
-    return this.walmartService.editAdGroups(walmartAdGroups, createDto, accountId, access_token);
+    const publisherAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, "put");
+    return this.publisherService.editAdGroups(publisherAdGroups, createDto, accountId, access_token);
   }
 
   @Delete()
@@ -106,8 +104,8 @@ export class AdGroupsController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const walmartAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, 'delete');
-    return this.walmartService.deleteAdgroups(walmartAdGroups, createDto, access_token, accountId);
+    const publisherAdGroups: PublisherAdGroup[] = transformMarinAdgroup(createDto, 'delete');
+    return this.publisherService.deleteAdgroups(publisherAdGroups, createDto, access_token, accountId);
   }
 
 }

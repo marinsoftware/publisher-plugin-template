@@ -9,7 +9,110 @@ SERVER:
   port: ${service.port:-2020}
   frontendHostname: ${service.frontendHostname}
 
+LOCAL_DEV_TESTING: ${local-dev-testing:-false}
+USE_LOCAL_CACHE: ${use-local-cache:-false}
+
+DEFAULT_MARIN_USER_LEGACY_ID: ${default-legacy-id:-113419}
+
+REDIS:
+  enabled: ${redis.enabled:-false}
+  hosts: ${redis.hosts:-redis://localhost:6379}
+  name: ${redis.name:-redis-marin-apple-linking-service}
+  defaultExpirationTimeMinutes: ${redis.default-expiration-time-minutes:-30}
+  sentinel:
+    url: ${redis.sentinel.url:-qa2-redis7-sentinel-lv-101:18000,qa2-redis7-sentinel-lv-102:18000,qa2-redis7-sentinel-lv-103:18000}
+
+TEMP_DIR: ${marin-frontend-api-service.tempDir:-/var/app_data/marin-frontend-api-service}
+ENVIRONMENT: ${env:-development}
+GRAPHITE_SERVER: ${graphite.host:-insert.test.host:9000}
+
+REPORT:
+  PAGE_SIZE: ${report.pagesize:-20000}
+  DRIP_DROP_PAGE_SIZE: ${report.dripdroppagesize:-10000}
+
+KAFKA:
+  ZOOKEEPER_URL: ${kafka.zookeeper.hosts:-labs-kafkazk-lv-101,labs-kafkazk-lv-102,labs-kafkazk-lv-103}
+  MONITOR_TIMEOUT_MINS: 10
+  USER_REPORT:
+    TOPIC: ${env-kafka:-devdarth}-userReportGeneration.Ready
+    GROUP_ID: marin-api-user-report
+  PACING_DASHBOARD_REPORT:
+    TOPIC: ${env-kafka:-devdarth}-pacingDashboardReportGeneration.Ready
+    GROUP_ID: marin-api-pacing-report
+
+APM:
+  NAME: ${apm.name:-dev}
+  URL: ${apm.url:-http://dev-elk-apm-lv-101:8200/}
+
+HEALTH_SERVICE_PATH: /admin/status
+HEALTH_CHECK_DEPENDENCY_PARAMS:
+  customerId: ${marin-frontend-api-service.healthCheckCustomerId:-12851}
+  clientId: ${marin-frontend-api-service.healthCheckClientId:-1285081}
+  userId: ${marin-frontend-api-service.healthCheckUserId:-125552015}
+  AUDIT_LOG:
+    objectId: ${marin-frontend-api-service.healthCheckAuditLogObjectId:-3367337}
+    objectType: ${marin-frontend-api-service.healthCheckAuditLogObjectType:-campaigns}
+  JOB_MANAGER:
+    jobId: ${marin-frontend-api-service.healthCheckJobManagerJobId:-101716539}
+    # TODO: Update the values when side panel service is deployed to DIT
+  SIDE_PANEL:
+    objectId: ${marin-frontend-api-service.healthCheckSidePanelObjectId:-3367337}
+    objectType: ${marin-frontend-api-service.healthCheckSidePanelObjectType:-campaigns}
+    publisherId: ${marin-frontend-api-service.healthCheckSidePanelPublisherId:-4}
+    accountId: ${marin-frontend-api-service.healthCheckSidePanelAccountId:-99860}
+
+NFS_ROOT_PATH:
+  report: /var/marin/reports
+  FTP: /var/marin/upload
+  CMT: /var/marin/insights
+
+SSO:
+  siteID: marin
+  siteSecretKey: ${marin-frontend-api-service.sso.site-secret-key:-$2a$10$azwh46JqWDBgU0erNURpiOSHVj9thP409X8llGdAGFINMd8tvXCpC}
+
+
+  SSO_SERVICE:
+    protocol: http
+    host: ${marin-sso-service.host:-dit-fe-lv-103.marinsw.net}
+    pathname: ''
+    healthCheck:
+      serviceName: marin-sso-service
+
+
+SENDGRID:
+  apiUser: ${sendgrid.apiUser:-sendGridApiUser}
+  apiKey: ${sendgrid.apiKey:-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}
+  fromEmail: ${sendgrid.fromEmail:-donotreply@marinsoftware.com}
+
+LIMIT_BREACHED_EMAIL_TO: ${limit-breached-email-to:-donotreply@marinsoftware.com}
+
+CLIENT_SECRET: ${marin-frontend-api-service.client_secret:-$2a$10$azwh46JqWDBgU0erNURpiOSHVj9thP409X8llGdAGFINMd8tvXCpC}
+
 GELF:
   host: ${gelf.host:-labs-elk-gelf-vip.labs.marinsw.net}
   port: ${gelf.port:-12201}
 
+
+
+TRACKER_QUICKSIGHT_DASHBOARD:
+  awsAccountId: '262397785893'
+  awsAccessKeyId: 'AKIAT2GBAO4S2OILV4U2'
+  awsSecretAccessKey: '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'
+  awsZone: 'us-east-1'
+  clientIdHashKey: 'wawptw'
+  itpDashboardId: ${tracker-quicksight-dashboard.itp.dashboardId:-0f843390-3445-4072-aa2b-60171c6cfa0e}
+  diagnosticDashboardId: ${tracker-quicksight-dashboard.diagnostic.dashboardId:-794562ad-94ef-437d-b6aa-3a9561c159a4}
+  offlineDashboardId: ${tracker-quicksight-dashboard.offline.dashboardId:-794562ad-94ef-437d-b6aa-3a9561c159a4}
+  analyticsDashboardId: ${tracker-quicksight-dashboard.analytics.dashboardId:-794562ad-94ef-437d-b6aa-3a9561c159a4}
+
+
+API_URL: ${API_URL:-https://developer.api.stg.walmart.com/api-proxy/service/WPA/Api/v1/api/v1/}
+API_URL_V2: ${API_URL_V2:-https://developer.api.stg.walmart.com/api-proxy/service/WPA/Api/v1/api/v2/}
+CONSUMER_ID: ${CONSUMER_ID:-41ebc460-0b16-4ade-86f3-9d431f8b3151}
+AUTH_TOKEN: ${AUTH_TOKEN:-7eef0f1b-f05b-4be7-9225-dfb3a31f8230}
+VERSION: ${VERSION:-1}
+APP_ID: ${APP_ID:-1478919}
+SECRET_ADS: ${SECRET_ADS:-5a3941628c97008e2db430253d8b9197b916fdcd}
+REDIRECT_URI: ${REDIRECT_URI:-https://cloudfunc15-frontend-101.aws.marinsw.net/transientPage}
+REDIRECT_URI_JUSTADS: ${REDIRECT_URI_JUSTADS:-https://cloudfunc15-plus-one-101.aws.marinsw.net:3001/decodeOAuthUrl}
+REDIRECT_V1_URI_JUSTADS: ${REDIRECT_V1_URI_JUSTADS:-https://qa2-marin-apple-linking-service.marinsoftware.com:3001/api/v1/decodeOAuthUrl}

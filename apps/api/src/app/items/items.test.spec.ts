@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AdItemsController } from './ad-items.controller';
 import { PublisherApiService } from "../services/publisher_api.service";
-import { WalmartAdItem } from "../models/walmart-objects";
+import { PublisherAdItem } from "../models/publisher-objects";
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { transformMarinAdItems, transformWalmartAdItems } from "../transformers/object-transformer";
+import { transformMarinAdItems, transformPublisherAdItems } from "../transformers/object-transformer";
 import { PublisherUtil } from "../services/publisher_utils.service";
 import { AdItemsModule } from "./ad-items.module";
 import { CampaignController } from "../campaigns/campaign.controller";
@@ -11,9 +11,9 @@ import { AdGroupsController } from "../groups/ad-groups.controller";
 
 describe('Ad Items', () => {
   let adItemController: AdItemsController;
-  let walmartService: PublisherApiService;
+  let publiherService: PublisherApiService;
   let campaignId: number;
-  let walmartAdItemObj, groupSingleObj;
+  let publisherAdItemObj, groupSingleObj;
   let publisherUtil: PublisherUtil;
   let campaignController: CampaignController;
   let adGroupsController: AdGroupsController;
@@ -27,12 +27,12 @@ describe('Ad Items', () => {
     .compile();
 
     adItemController = app.get<AdItemsController>(AdItemsController);
-    walmartService = app.get<PublisherApiService>(PublisherApiService);
+    publiherService = app.get<PublisherApiService>(PublisherApiService);
     publisherUtil = app.get<PublisherUtil>(PublisherUtil);
     campaignController = app.get<CampaignController>(CampaignController);
     adGroupsController = app.get<AdGroupsController>(AdGroupsController);
     campaignId = 1;
-    walmartAdItemObj = <WalmartAdItem> {
+    publisherAdItemObj = <PublisherAdItem> {
       campaignId: 1,
       adGroupId: 1,
       itemId: "string",
@@ -68,25 +68,25 @@ describe('Ad Items', () => {
     });
 
 		it('successfully transform publisher aditem object list', () => {
-			let response = transformWalmartAdItems([walmartAdItemObj]);
+			let response = transformPublisherAdItems([publisherAdItemObj]);
 			expect(response).toBeInstanceOf(Array)
 			expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('properties');
 
-      walmartAdItemObj.status = 'enabled';
-      response = transformWalmartAdItems([walmartAdItemObj]);
+      publisherAdItemObj.status = 'enabled';
+      response = transformPublisherAdItems([publisherAdItemObj]);
 			expect(response).toBeInstanceOf(Array)
       expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('properties');
 
-      walmartAdItemObj.status = 'paused';
-      response = transformWalmartAdItems([walmartAdItemObj]);
+      publisherAdItemObj.status = 'paused';
+      response = transformPublisherAdItems([publisherAdItemObj]);
 			expect(response).toBeInstanceOf(Array)
       expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('properties');
 
-      walmartAdItemObj.status = 'deleted';
-      response = transformWalmartAdItems([walmartAdItemObj]);
+      publisherAdItemObj.status = 'deleted';
+      response = transformPublisherAdItems([publisherAdItemObj]);
 			expect(response).toBeInstanceOf(Array)
       expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('properties');
@@ -128,87 +128,6 @@ describe('Ad Items', () => {
 			expect(response[0]).toHaveProperty('status');
       
     });
-
-		// it('successfully transform walmart aditem post object', () => {
-		// 	const response = transformMarinAdItems([groupSingleObj]);
-		// 	expect(response).toBeInstanceOf(Array)
-		// 	expect(response[0]).toHaveProperty('adGroupId');
-		// 	expect(response[0]).toHaveProperty('name');
-		// 	expect(response[0]).toHaveProperty('status');
-    // });
-
-		// it('successfully create aditem objects post', done => {
-		// 	jest.spyOn(walmartService, 'makeApiCall').mockImplementation(
-		// 		() => { return of([walmartAdItemObj]) }
-		// 	);
-		// 	walmartService.createObjects('aditem', [walmartAdItemObj])
-		// 	.subscribe(
-		// 			(res) => {
-		// 				expect(res).toBeInstanceOf(Array)
-		// 				expect(res[0]).toHaveProperty('adGroupId', 1);
-		// 				expect(res[0]).toHaveProperty('campaignId', 1);
-		// 				expect(res[0]).toHaveProperty('itemId', "string");
-		// 				expect(res[0]).toHaveProperty('bid', 1);
-		// 			done();
-		// 			}
-		// 	);
-    // });
-
-    // it('aditem post response translation on success', done => {
-		// 	const response: Observable<any> = of([{"code": 'success', "details": "dummy details", "adItemId":"123"}]);
-		// 	walmartService.responseTranslation(response, [groupSingleObj], 'adItem')
-		// 	.subscribe(
-		// 		(res) => {
-		// 			expect(res).toHaveProperty('requestResult', 'SUCCESS');
-		// 			done();
-		// 		}
-		// 	);
-    // });
-
-    // it('aditem post response translation on failure', done => {
-		// 	const response: Observable<any> = of([{"code": 'failure', "details": "dummy details", "adItemId":"123"}]);
-		// 	walmartService.responseTranslation(response, [groupSingleObj], 'adItem')
-		// 	.subscribe(
-		// 		(res) => {
-		// 			expect(res).toHaveProperty('requestResult', 'Error');
-		// 			done();
-		// 		}
-		// 	);
-    // });
-
-    // it('aditem post response translation on partial success', done => {
-		// 	const response: Observable<any> = of([{"code": 'failure', "details": "dummy details", "aditem":"123"}, {"code": 'success', "details": "dummy details", "aditem":"1234"}]);
-		// 	walmartService.responseTranslation(response, [groupSingleObj, groupSingleObj], 'aditem')
-		// 	.subscribe(
-		// 		(res) => {
-		// 			expect(res).toHaveProperty('requestResult', 'PARTIAL-SUCCESS');
-		// 			done();
-		// 		}
-		// 	);
-    // });
-
-    // it('successfully transform walmart aditem delete object', () => {
-    //   groupSingleObj.status = "INACTIVE";
-    //   groupSingleObj.properties[0].name = "image_url";
-		// 	let response = transformMarinAdItems([groupSingleObj]);
-		// 	expect(response).toBeInstanceOf(Array);
-		// 	expect(response[0]).toHaveProperty('adGroupId');
-		// 	expect(response[0]).toHaveProperty('adItemId');
-		// 	expect(response[0]).toHaveProperty('name');
-		// 	expect(response[0]).toHaveProperty('status');
-
-    //   groupSingleObj.properties[0].name = "destination_url";
-		// 	response = transformMarinAdItems([groupSingleObj]);
-    //   expect(response).toBeInstanceOf(Array);
-
-    //   groupSingleObj.properties[0].name = "review_status";
-		// 	response = transformMarinAdItems([groupSingleObj]);
-    //   expect(response).toBeInstanceOf(Array);
-
-    //   groupSingleObj.properties[0].name = "campaignId";
-		// 	response = transformMarinAdItems([groupSingleObj]);
-    //   expect(response).toBeInstanceOf(Array);
-    // });
 
   });
 });

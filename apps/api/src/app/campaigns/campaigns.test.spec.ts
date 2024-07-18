@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CampaignController } from './campaign.controller';
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { transformMarinCampaign, transformWalmartCampaign } from '../transformers/object-transformer';
+import { transformMarinCampaign, transformPublisherCampaign } from '../transformers/object-transformer';
 import { CampaignModule } from './campaign.module';
 
 
@@ -49,7 +49,7 @@ describe('Campaign Service', () => {
 		});
 
 		it('successfully transform apple campaign list object', () => {
-			const response = transformWalmartCampaign([campaignSingleObjDummy]);
+			const response = transformPublisherCampaign([campaignSingleObjDummy]);
 			expect(response).toBeInstanceOf(Array)
 			expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('parentId');
@@ -58,7 +58,7 @@ describe('Campaign Service', () => {
 
 		it('successfully transform apple campaign paused object', () => {
 			campaignSingleObjDummy.displayStatus = 'PAUSED'
-			const response = transformWalmartCampaign([campaignSingleObjDummy]);
+			const response = transformPublisherCampaign([campaignSingleObjDummy]);
 			expect(response).toBeInstanceOf(Array)
 			expect(response[0]).toHaveProperty('name');
 			expect(response[0]).toHaveProperty('parentId');
@@ -67,7 +67,7 @@ describe('Campaign Service', () => {
 
 		it('successfully transform apple campaign deleted object', () => {
 			campaignSingleObjDummy.displayStatus = 'DELETED'
-			const response = transformWalmartCampaign([campaignSingleObjDummy]);
+			const response = transformPublisherCampaign([campaignSingleObjDummy]);
 			console.log("response : ", response)
 			expect(response).toBeInstanceOf(Array)
 			expect(response[0]).toHaveProperty('name');
@@ -77,7 +77,7 @@ describe('Campaign Service', () => {
 
 		it('successfully transform apple campaign running object', () => {
 			campaignSingleObjDummy.displayStatus = 'RUNNING'
-			const response = transformWalmartCampaign([campaignSingleObjDummy]);
+			const response = transformPublisherCampaign([campaignSingleObjDummy]);
 			console.log("response : ", response)
 			expect(response).toBeInstanceOf(Array)
 			expect(response[0]).toHaveProperty('name');

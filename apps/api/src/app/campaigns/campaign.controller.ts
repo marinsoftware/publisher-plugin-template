@@ -1,10 +1,10 @@
 import {Controller, Get, Post, Body, Query, Put, Delete, HttpException, HttpStatus, Logger} from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { transformWalmartCampaign, transformMarinCampaign } from "../transformers/object-transformer";
+import { transformPublisherCampaign, transformMarinCampaign } from "../transformers/object-transformer";
 import { PublisherApiService } from "../services/publisher_api.service";
 import { PublisherUtil } from "../services/publisher_utils.service"
 import { MarinSingleObj } from "../models/marin-object.interface";
-import { WalmartCampaign } from "../models/walmart-objects";
+import { PublisherCampaign } from "../models/publisher-objects";
 
 @Controller('campaigns')
 export class CampaignController {
@@ -39,7 +39,7 @@ export class CampaignController {
       publisherCampaignList.push(...publisherResponse.data)
 
     } while (offset != publisherResponse.pagination.totalResults)
-    return transformWalmartCampaign(publisherCampaignList)
+    return transformPublisherCampaign(publisherCampaignList)
   }
 
   @Post()
@@ -54,9 +54,9 @@ export class CampaignController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const walmartCampaigns: WalmartCampaign[] = transformMarinCampaign(createCampaignDto, "post");
-    console.log("POST request payload after transformMarinCampaign", walmartCampaigns);
-    return await this.publisherService.createCampaigns(walmartCampaigns, createCampaignDto, accountId, access_token);
+    const publisherCampaigns: PublisherCampaign[] = transformMarinCampaign(createCampaignDto, "post");
+    console.log("POST request payload after transformMarinCampaign", publisherCampaigns);
+    return await this.publisherService.createCampaigns(publisherCampaigns, createCampaignDto, accountId, access_token);
   }
 
   @Put()
@@ -71,7 +71,7 @@ export class CampaignController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }    
-    const publisherCampaigns: WalmartCampaign[] = transformMarinCampaign(createCampaignDto, "put");
+    const publisherCampaigns: PublisherCampaign[] = transformMarinCampaign(createCampaignDto, "put");
     console.log("PUT request payload after transformMarinCampaign", publisherCampaigns);
     return this.publisherService.editPublisherCampaigns(publisherCampaigns, createCampaignDto, accountId, access_token);
   }
@@ -87,7 +87,7 @@ export class CampaignController {
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const publisherCampaigns: WalmartCampaign[] = transformMarinCampaign(createCampaignDto, 'delete');
+    const publisherCampaigns: PublisherCampaign[] = transformMarinCampaign(createCampaignDto, 'delete');
     return this.publisherService.deleteCampaigns(publisherCampaigns, createCampaignDto, access_token, accountId);
   }
 }

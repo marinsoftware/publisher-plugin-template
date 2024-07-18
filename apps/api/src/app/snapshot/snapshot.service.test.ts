@@ -78,7 +78,7 @@ describe('SnapshotService', () => {
   })
 });
 
-// Reports/Walmart Snapshot API
+// Reports/Publisher Snapshot API
 
 // Should take 3 query params: accountId, date, report type
 
