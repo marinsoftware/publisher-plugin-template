@@ -59,70 +59,11 @@ describe('AdGroupsController', () => {
     it ('method edit to be defined', () =>{
       expect(groupController.edit).toBeDefined();
     });
-
-    // it ('method delete to be defined', () =>{
-    //   expect(groupController.delete).toBeDefined();
-    // });
-
 	
     it('successfully transform apple group object list', () => {
 		let response = transformPublisherAdGroup([publisherAdGroupObj], 0);
 		expect(response).toBeInstanceOf(Array)
 		expect(response[0]).toHaveProperty('name');
-		expect(response[0]).toHaveProperty('properties');
-
-		publisherAdGroupObj.displayStatus = 'paused'
-		response = transformPublisherAdGroup([publisherAdGroupObj], 0);
-		expect(response).toBeInstanceOf(Array)
-		expect(response[0]).toHaveProperty('name');
-		expect(response[0]).toHaveProperty('properties');
-
-		publisherAdGroupObj.displayStatus = 'running'
-		response = transformPublisherAdGroup([publisherAdGroupObj], 0);
-		expect(response).toBeInstanceOf(Array)
-		expect(response[0]).toHaveProperty('name');
-		expect(response[0]).toHaveProperty('properties');
-
-		publisherAdGroupObj.displayStatus = 'deleted'
-		response = transformPublisherAdGroup([publisherAdGroupObj], 0);
-		expect(response).toBeInstanceOf(Array)
-		expect(response[0]).toHaveProperty('name');
-		expect(response[0]).toHaveProperty('properties');
-    });
-
-	it('successfully transform publisher adGroup put object', () => {
-		publisherAdGroupObj.status = "PAUSED";
-		let response = transformMarinAdgroup([publisherAdGroupObj], 'put');
-		expect(response).toBeInstanceOf(Array)
-		expect(response[0]).toHaveProperty('id');
-		expect(response[0]).toHaveProperty('status');
-
-		publisherAdGroupObj.status = "ACTIVE";
-		response = transformMarinAdgroup([publisherAdGroupObj], 'put');
-		expect(response).toBeInstanceOf(Array)
-		expect(response[0]).toHaveProperty('id');
-		expect(response[0]).toHaveProperty('status');
-    });
-
-	it('successfully transform apple group post object', () => {
-		let response = transformMarinAdgroup([publisherAdGroupObj], 'post');
-		expect(response).toBeInstanceOf(Array)
-		// expect(response[0]).toHaveProperty('status');
-		expect(response[0]).toHaveProperty('name');
-
-		publisherAdGroupObj.status = "DELETED";
-		response = transformMarinAdgroup([publisherAdGroupObj], 'post');
-		
-		expect(response).toBeInstanceOf(Array)
-		// expect(response[0]).toHaveProperty('status');
-		expect(response[0]).toHaveProperty('name');
-
-		publisherAdGroupObj.status = "PAUSED";
-		response = transformMarinAdgroup([publisherAdGroupObj], 'post');
-		expect(response).toBeInstanceOf(Array)
-		// expect(response[0]).toHaveProperty('status');
-		expect(response[0]).toHaveProperty('name');
-
     });
 
   });

@@ -26,46 +26,24 @@ export class AdGroupsController {
     isArray: true,
   })
   async get(@Query('accountId') accountId: number, @Query('refreshToken') token: string, @Query('campaignId') campaignId?: number, @Query('publisherId') publisherId?: number,@Query('publisherName') publisherName?: string, @Query('adgroupId') adgroupId?: number) {
-    let publisherAdgroup = [];
-    let publisherResponse;
+
     let access_token: string;
+    // according to publisher modify publisherUtil.refreshAccessToken
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
       access_token = response.access_token;
     } catch (error){
+      // if any exception occurs send status 500 wwith exception message
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    if(campaignId && adgroupId){
-      publisherResponse = await this.publisherService.getPublisherAdGroup(accountId, access_token, campaignId, adgroupId)
-      publisherAdgroup.push(publisherResponse.data)
-    }
-    else {
-      let campaignResponseList = []
-      if (campaignId){
-        campaignResponseList = [{"id": campaignId}];
-      } else {
-        campaignResponseList = await this.campaigncontroller.get(accountId, token);
-      }
-      for(const compaign of campaignResponseList){
-        let offset: number = 0;
-        do{
-          publisherResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
-          if ((!publisherResponse.data) || (publisherResponse.data.length == 0)){
-            break
-          }
-          offset = offset + publisherResponse.pagination.itemsPerPage;
-          publisherAdgroup.push(...publisherResponse.data);
-        } while (offset != publisherResponse.pagination.totalResults)
-      }
-    }
-    return transformPublisherAdGroup(publisherAdgroup, accountId)
+    const publisherResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token)
+    return transformPublisherAdGroup(publisherResponse, accountId)
   }
 
   @Post()
   @ApiOperation({ summary: 'Create campaigns' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(@Body() createDto: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string) {
-    this.logger.log('Create Adgroup Dto Apple Params', createDto);
     let access_token: string;
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
@@ -81,7 +59,6 @@ export class AdGroupsController {
   @ApiOperation({ summary: 'Edit Ad Groups' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async edit(@Body() createDto: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string ) {
-    this.logger.log('Edit Adggroup Dto Apple Params', createDto);
     let access_token: string;
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);

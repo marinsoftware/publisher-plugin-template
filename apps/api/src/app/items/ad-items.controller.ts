@@ -25,122 +25,61 @@ export class AdItemsController {
     description: 'Retrieve all ad items for a specific campaign or advertiser',
     isArray: true,
   })
-  async get(@Query('accountId') accountId: number, @Query('refreshToken') token: string, @Query('publisherId') publisherId?: number, @Query('publisherName') publisherName?: string, @Query('campaignId') campaignId?: number, @Query('adgroupId') adgroupId?: number,) {    
-    let publisherAds = [];
-    let publisherResponse;
+  async get(@Query('accountId') accountId: number, @Query('refreshToken') token: string, @Query('publisherId') publisherId?: number, @Query('publisherName') publisherName?: string, @Query('campaignId') campaignId?: number, @Query('adgroupId') adgroupId?: number,) {
     let access_token: string;
+    // according to publisher modify publisherUtil.refreshAccessToken
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
       access_token = response.access_token;
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const campaignResponseList = await this.campaigncontroller.get(accountId, token);
-    for(const campaign of campaignResponseList){
-      const adgroupResponseList = await this.adGroupscontroller.get(accountId, token, Number(campaign.id));
-      for(const adgroupObj of adgroupResponseList){
-        let offset: number = 0;
-        let default_ad = {
-          id: "override with group id",
-          adGroupId: "override with group id",
-          name: 'Default Ad',
-          status: 'enabled',
-        }
-        default_ad['adGroupId']=adgroupObj.id;
-        default_ad['id']=adgroupObj.id;
-        publisherAds.push(...[default_ad]);
-        do{
-          publisherResponse = await this.publisherService.getPublisherAdItems(accountId, access_token, campaign.id, adgroupObj.id, offset)
-          if ((!publisherResponse.data) || (publisherResponse.data.length == 0)){
-            break
-          }
-          offset = offset + publisherResponse.pagination.itemsPerPage;
-          publisherAds.push(...publisherResponse.data);
-        } while (offset != publisherResponse.pagination.totalResults)
-      }
-    }
-    return transformPublisherAdItems(publisherAds)
+    const publisherResponse = await this.publisherService.getPublisherAdItems(accountId, access_token)
+    return transformPublisherAdItems(publisherResponse)
   }
 
   @Post()
   @ApiOperation({ summary: 'Create Ad Items' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(@Body() createDto: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string) {
-    this.logger.log('Create AdItem Dto Apple Params', createDto);
     let access_token: string;
-    let publisherAdgroupList = [];
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
       access_token = response.access_token
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const campaignResponseList = await this.campaigncontroller.get(accountId, token);
-    for(const compaign of campaignResponseList){
-      let offset: number = 0;
-      let publisherAdgroupResponse;
-      do{
-        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
-        offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
-        publisherAdgroupList.push(...publisherAdgroupResponse.data);
-      } while (offset != publisherAdgroupResponse.pagination.totalResults)
-    }
-
     const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(createDto);
-    return this.publisherService.createAdItem(publisherAdItem, createDto, publisherAdgroupList, accountId, access_token);
+    return this.publisherService.createAdItem(publisherAdItem, createDto, accountId, access_token);
   }
 
   @Put()
   @ApiOperation({ summary: 'Edit Ad Items' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async edit(@Body() editAdItems: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string) {
-    this.logger.log('Edit AdItem Dto Apple Params', editAdItems);
     let access_token: string;
-    let publisherAdgroupList = [];
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
       access_token = response.access_token
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const campaignResponseList = await this.campaigncontroller.get(accountId, token);
-    for(const compaign of campaignResponseList){
-      let offset: number = 0;
-      let publisherAdgroupResponse;
-      do{
-        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
-        offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
-        publisherAdgroupList.push(...publisherAdgroupResponse.data);
-      } while (offset != publisherAdgroupResponse.pagination.totalResults)
-    }
     const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(editAdItems);
-    return this.publisherService.editAdItem(publisherAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
+    return this.publisherService.editAdItem(publisherAdItem, editAdItems, accountId, access_token);
   }
 
   @Delete()
   @ApiOperation({ summary: 'Delete Ad Items' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  async delete(@Body() editAdItems: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string) {
-    this.logger.log('Delete AdItem Dto Apple Params', editAdItems);
+  async delete(@Body() adItems: MarinSingleObj[], @Query('accountId') accountId: number, @Query('refreshToken') token: string) {
     let access_token: string;
-    let publisherAdgroupList = [];
     try{
       const response = await this.publisherUtil.refreshAccessToken(token);
       access_token = response.access_token
     } catch (error){
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const campaignResponseList = await this.campaigncontroller.get(accountId, token);
-    for(const compaign of campaignResponseList){
-      let offset: number = 0;
-      let publisherAdgroupResponse;
-      do{
-        publisherAdgroupResponse = await this.publisherService.getPublisherAdGroups(accountId, access_token, compaign.id, offset)
-        offset = offset + publisherAdgroupResponse.pagination.itemsPerPage;
-        publisherAdgroupList.push(...publisherAdgroupResponse.data);
-      } while (offset != publisherAdgroupResponse.pagination.totalResults)
-    }
-    const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(editAdItems);
-    return this.publisherService.deleteAdItem(publisherAdItem, editAdItems, publisherAdgroupList, accountId, access_token);
+    const publisherAdItem: PublisherAdItem[] = transformMarinAdItems(adItems);
+    return this.publisherService.deleteAdItem(publisherAdItem, adItems, accountId, access_token);
   }
 }

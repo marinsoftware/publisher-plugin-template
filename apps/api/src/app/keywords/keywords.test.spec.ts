@@ -67,68 +67,10 @@ describe('keywords', () => {
       expect(keywordController.edit).toBeDefined();
     });
 
-    // it ('method delete to be defined', () =>{
-    //   expect(keywordController.delete).toBeDefined();
-    // });
-
-	it('successfully transform publisher keyword object list', () => {
+  	it('successfully transform publisher keyword object list', () => {
         let response = transformPublisherkeywords([publisherkeywordObj], 0);
         expect(response).toBeInstanceOf(Array)
         expect(response[0]).toHaveProperty('name');
-        expect(response[0]).toHaveProperty('properties');
-
-        publisherkeywordObj.status = 'paused';
-        response = transformPublisherkeywords([publisherkeywordObj] , 0);
-		expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('name');
-		expect(response[0]).toHaveProperty('properties');
-
     });
-
-    it('successfully transform keyword put object', () => {
-        groupSingleObj.status = "PAUSED";
-        let response = transformMarinKeywords([groupSingleObj], 'put');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('status');
-
-        groupSingleObj.status = "ACTIVE";
-        response = transformMarinKeywords([groupSingleObj], 'put');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('status');
-  
-      });
-  
-      it('successfully transform keyword post object', () => {
-
-        groupSingleObj.status = "PAUSED";
-        groupSingleObj.properties.name = "max_cpc";
-        let response = transformMarinKeywords([groupSingleObj], 'post');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('status');
-
-        groupSingleObj.status = "ACTIVE";
-        groupSingleObj.properties.name = "match_type";
-        response = transformMarinKeywords([groupSingleObj], 'post');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('status');
-
-        groupSingleObj.status = "review_status";
-        groupSingleObj.properties.name = "match_type";
-        response = transformMarinKeywords([groupSingleObj], 'post');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('text');
-
-        groupSingleObj.status = "INACTIVE";
-        response = transformMarinKeywords([groupSingleObj], 'post');
-        expect(response).toBeInstanceOf(Array)
-        expect(response[0]).toHaveProperty('id');
-        expect(response[0]).toHaveProperty('text');
-      });
-
   });
 });

@@ -9,88 +9,34 @@ function transformPublisherCampaign(publisherCampaigns): MarinSingleObj[] {
       marinCampaign.name = publisherCampaign.name;
       marinCampaign.parentId = publisherCampaign.orgId.toString();
       switch (publisherCampaign.displayStatus.toLowerCase()) {
-        // Please confirm status values from asa channel
+        // confirm status values from publisher documentation channel
         case 'running':
-          marinCampaign.status = 'ACTIVE';
+          marinCampaign.status = '{STATUS}';
           break;
         case 'paused':
-          marinCampaign.status = 'PAUSED';
+          marinCampaign.status = '{STATUS}';
           break;
         default:
-          marinCampaign.status = 'PAUSED';
+          marinCampaign.status = '{STATUS}';
       }
       if (publisherCampaign.id) {
+        // confirm id value from publisher documentation
         marinCampaign.id = publisherCampaign.id.toString();
       }
       marinCampaign.properties = [];
-      let property;
-      if (publisherCampaign.adamId) {
-        property = {
-          name: "adamId",
-          value: publisherCampaign.adamId
-        };
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.billingEvent) {
-        property = {
-          name: "billing_event",
-          value: publisherCampaign.billingEvent
-        };
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.countriesOrRegions) {
-        property = {
-          name: "countriesOrRegions",
-          value: publisherCampaign.countriesOrRegions.toString()
-        };
-        marinCampaign.properties.push(property)
-      }      
+      let property;   
       if (publisherCampaign.startTime) {
+        // confirm date value from publisher documentation
         property = {
           name: "start_date", 
-          value: new Date(publisherCampaign.startTime).toISOString().slice(0, 10)
+          value: "{Date}"
         };
         marinCampaign.properties.push(property)
       }
       if (publisherCampaign.endTime) {
         property = {
           name: "end_date", 
-          value: new Date(publisherCampaign.endTime).toISOString().slice(0, 10)
-        };
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.dailyBudgetAmount) {
-        property = {
-          name: "daily_budget",
-          value: publisherCampaign.dailyBudgetAmount.amount
-        };
-        marinCampaign.properties.push(property)
-        property = {
-          name: "budget_type",
-          value: 'DAILY'
-        };
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.budgetAmount) {
-        property = {
-          name: "total_budget", 
-          value: publisherCampaign.budgetAmount.amount.toString()
-        };
-        marinCampaign.properties.push(property)
-        property = {
-          name: "budget_type",
-          value: 'LIFETIME'
-        };
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.adChannelType) {
-        property = {name: "publisher_campaign_type", value: publisherCampaign.adChannelType};
-        marinCampaign.properties.push(property)
-      }
-      if (publisherCampaign.supplySources) {
-        property = {
-          name: "targeting_type",
-          value: publisherCampaign.supplySources.toString()
+          value: '{END_DATE}'
         };
         marinCampaign.properties.push(property)
       }
@@ -106,11 +52,6 @@ function transformMarinCampaign(marinCampaign: MarinSingleObj[], requestType: st
   marinCampaign.forEach(campaign => {
     const publisherCampaign = <PublisherCampaign>{};
     publisherCampaign.name = campaign.name;
-    if ((requestType == 'put' || requestType == 'delete') && campaign.id) {
-      publisherCampaign.id = Number(campaign.id);
-    } else if (requestType != 'put') {
-      publisherCampaign.orgId = Number(campaign.parentId);
-    }
 
     switch (campaign.status.toUpperCase()) {
       case 'ACTIVE':
@@ -129,42 +70,11 @@ function transformMarinCampaign(marinCampaign: MarinSingleObj[], requestType: st
     campaign.properties.forEach(property => {
       switch (property.name) {
         case 'start_date':
-          publisherCampaign.startTime = `${property.value}T00:00:00.000`;
+          publisherCampaign.startTime = `${property.value}`;
           break;
         case 'end_date':
-          publisherCampaign.endTime = `${property.value}T00:00:00.000`;
+          publisherCampaign.endTime = `${property.value}`;
           break;
-        case 'daily_budget':
-            publisherCampaign.dailyBudgetAmount = {'amount': String(property.value), 'currency': 'USD'};
-          break;
-        case 'total_budget':
-          publisherCampaign.budgetAmount = {'amount': String(property.value), 'currency': 'USD'};
-          break;  
-        case 'adamId':
-          if (requestType != 'put') {
-            publisherCampaign.adamId = Number(property.value);
-          }
-          break;
-        case 'countriesOrRegions':
-          property.value = property.value.replace(" ","");
-          publisherCampaign.countriesOrRegions = property.value.split(",");
-          break;
-        case 'billing_event':
-          if (requestType != 'put') {
-            publisherCampaign.billingEvent = property.value.toString();
-          }
-          break;
-        // need confirmation from product manager for targetting type list
-        case 'targeting_type':
-          if (requestType != 'put') {
-            publisherCampaign.supplySources = property.value.split(",");
-          }
-          break; 
-        case 'publisher_campaign_type':
-          if (requestType != 'put') {
-            publisherCampaign.adChannelType = property.value;
-          }
-          break; 
       }
     })
     allCampaigns.push(publisherCampaign);
@@ -194,13 +104,13 @@ function transformPublisherAdGroup(publisherAdGroup, accountId: number) : MarinS
         default:
           marinAdGroup.status = adGroup.displayStatus.toUpperCase();
         case 'running':
-          marinAdGroup.status = 'ACTIVE';
+          marinAdGroup.status = 'adGroup.status.value';
           break;
         case 'paused':
-          marinAdGroup.status = 'PAUSED';
+          marinAdGroup.status = 'adGroup.status.value';
           break;
         case 'deleted':
-          marinAdGroup.status = 'DELETED';
+          marinAdGroup.status = 'adGroup.status.value';
           break;
       }
       if (adGroup.campaignId != undefined) {
@@ -211,18 +121,10 @@ function transformPublisherAdGroup(publisherAdGroup, accountId: number) : MarinS
       }
       marinAdGroup.properties = [];
       let property;
-      if (adGroup.defaultBidAmount && adGroup.defaultBidAmount.amount) {
-        property = {name: "max_cpc", value: adGroup.defaultBidAmount.amount};
-        marinAdGroup.properties.push(property)
-      }
-      if (adGroup.pricingModel) {
-        property = {name: "pricingModel", value: adGroup.pricingModel};
-        marinAdGroup.properties.push(property)
-      }
       if (adGroup.startTime) {
         property = {
           name: "startTime",
-          value: new Date(adGroup.startTime).toISOString().slice(0, 10)
+          value: adGroup.value
         };
         marinAdGroup.properties.push(property)
       }
@@ -267,11 +169,6 @@ function transformPublisherkeywords(publisherkeywords, accountId: number) : Mari
       marinKeywords.push(marinKeyword);
     })
   }
-  // const dummyMarinAdGroup = <MarinSingleObj>{};
-  // dummyMarinAdGroup.parentId = accountId.toString();
-  // dummyMarinAdGroup.id = accountId.toString();
-
-  // marinAdGroups.push(dummyMarinAdGroup);
   return marinKeywords;
 }
 
@@ -281,12 +178,6 @@ function transformMarinAdgroup(marinAdGroups: MarinSingleObj[], requestType: str
     const publisherAdGroup = <PublisherAdGroup>{};
     if (adgroup.parentId) {
       publisherAdGroup.campaignId = Number(adgroup.parentId);
-    }
-    if ((requestType == 'put' || requestType == 'delete') && adgroup.id) {
-      publisherAdGroup.id = Number(adgroup.id)
-    }
-    if (requestType != 'put' && adgroup.name){
-      publisherAdGroup.name = adgroup.name;
     }
     
     switch (adgroup.status.toUpperCase()) {
@@ -303,14 +194,8 @@ function transformMarinAdgroup(marinAdGroups: MarinSingleObj[], requestType: str
     
     if (adgroup.properties){
       adgroup.properties.forEach(properties => {
-        if (properties.name == 'max_cpc') {
-          publisherAdGroup.defaultBidAmount = {'amount': String(properties.value), 'currency': 'USD'};
-        }
-        if (properties.name == 'pricingModel' && requestType != 'put') {
+        if (properties.name == 'pricingModel') {
           publisherAdGroup.pricingModel = properties.value;
-        }
-        if (requestType != 'put' && properties.name == 'startTime') {
-          publisherAdGroup.startTime = `${properties.value}T00:00:00.000`;
         }
       })
     }
@@ -465,10 +350,6 @@ function transformMarinKeywords(marinKeyword: MarinSingleObj[], requestType?:str
             publisherKeyword.matchType = property.value.toUpperCase();
             break;
           }
-
-        // case 'campaignId':
-        //   publisherKeyword.campaignId = Number(property.value);
-        //   break;
       }
     })
     allKeywords.push(publisherKeyword);

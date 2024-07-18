@@ -34,53 +34,36 @@ export class PublisherApiService {
   }
 
   /**
-   * Gets all campaigns in the Apple Account
+   * Gets all campaigns in the Publiser Account
    * @return {Promise<PublisherCampaign[]>}
    * @param advertiserId
    * @param campaignId
    */
-  async getPublisherCampaigns(advertiserId : number, campaignId? : number, offset?:number, access_token?:string){
+  async getPublisherCampaigns(advertiserId: number, campaignId?: number, access_token?: string){
+    // Add Remaining publisher hhttp request settings
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}campaigns`,
-      method: 'GET',
+      baseURL: `${this.apiUrl}`,
+      method: '{Method-Name}',
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${advertiserId}`,
+        "Content-Type": "{Content-Type}",
       },
     }
+    /*
+      use campaign id to fetch single camaign according to publisher requirement if sent in request params.
+      most publiser support url param
+      if campaign id is requred in body then adjust body with campaign Id
+      if (campaignId != undefined) {
+        options.baseURL = options.baseURL + `/${campaignId}`;
+      }
+    */  
 
-    if (campaignId != undefined) {
-      options.baseURL = options.baseURL + `/${campaignId}`;
-    } else {
-      options.baseURL = options.baseURL + `?offset=${offset}&limit=${environment.limit}`;
-    }
     try {
       const response = await this.makeHttpCall(options);
       return response;
     } catch(error){
+      // send exception message with status 500
       throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }
-
-  /**
-   * Gets all campaigns in the Publisher Account
-   * @return {Promise<PublisherCampaign[]>}
-   * @param advertiserId
-   * @param campaignId
-   */
-  getCampaigns(advertiserId : number, campaignId? : number): Observable<PublisherCampaign[]> {
-    /*TODO Need to add filtering Feature*/
-    const options: AxiosRequestConfig = {
-      baseURL: this.apiUrl + 'campaigns',
-      method: 'GET',
-      headers: {},
-      params: {}
-    }
-    if (campaignId != undefined) {
-      options.params['campaignId'] = campaignId;
-    }
-    return this.makeApiCall(options);
   }
 
   /**
@@ -90,30 +73,10 @@ export class PublisherApiService {
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
   async createCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], accountId, access_token) {
-    // return this.responseTranslation(this.createObjects('campaign', campaigns), marinCampaign, 'campaign');
-    let campaignList = []
-    for (let index = 0 ; index < campaigns.length; index++){
-      let response;
-      try{
-        response = await this.createObjects('campaigns', campaigns[index], accountId, access_token)
-      }catch(e){
-        console.log("create campaign>>>>",e.error);
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      campaignList.push(response);
-    }
-    return this.publisherResponseTranslation(campaignList, marinCampaign, 'campaigns')
+    const response = await this.createObjects('campaigns', campaigns, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinCampaign, 'campaigns')
   }
 
-  /**
-   * Edits campaigns
-   * @param campaigns
-   * @param {MarinSingleObj[]} marinCampaign
-   * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
-   */
-  editCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[]) {
-    return this.responseTranslation(this.editObjects('campaign', campaigns), marinCampaign, 'campaign');
-  }
 
     /**
    * Edits campaigns
@@ -122,18 +85,8 @@ export class PublisherApiService {
    * @return  { MarinResponse | MarinFailedResponse} Response
    */
     async editPublisherCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], accountId?:number, access_token?:string) {
-      let campaignList = []
-      for (let index = 0 ; index < campaigns.length; index++){
-        let response;
-        try{
-          response = await this.editPublisherObjects('campaigns', campaigns[index], accountId, access_token, campaigns[index].id)
-        }catch(e){
-          console.log(">>editPublisherObjects<<<",e.error);
-          response = { data: null, pagination: null, error: { errors: e.error } }
-        }
-        campaignList.push(response);
-      }
-      return this.publisherResponseTranslation(campaignList, marinCampaign, 'campaigns');
+      const response = await this.editPublisherObjects('campaigns', campaigns, accountId, access_token)
+      return this.publisherResponseTranslation(response, marinCampaign, 'campaigns');
     }
 
   /**
@@ -142,18 +95,8 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinCampaign
    */
   async deleteCampaigns(campaigns: PublisherCampaign[], marinCampaign: MarinSingleObj[], access_token, accountId) {
-    let campaignList = []
-    for (let index = 0 ; index < campaigns.length; index++){
-      let response;
-      try {
-        response = await this.deleteObjects('campaigns', access_token, accountId, campaigns[index].id)
-        response['data'] = campaigns[index];
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      campaignList.push(response);
-    }
-    return this.publisherResponseTranslation(campaignList, marinCampaign, 'campaigns');
+    const response = await this.deleteObjects('campaigns', access_token, accountId, "objectId",)
+    return this.publisherResponseTranslation(response, marinCampaign, 'campaigns');
   }
 
   /**
@@ -162,18 +105,8 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinAdgroup
    */
   async deleteAdgroups(adgroups: PublisherAdGroup[], marinAdgroups: MarinSingleObj[], access_token, accountId) {
-    let adgroupList = []
-    for (let index = 0 ; index < adgroups.length; index++){
-      let response;
-      try {
-        response = await this.deleteObjects('adgroups', access_token, accountId, adgroups[index].campaignId, adgroups[index].id)
-        response['data'] = adgroups[index];
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      adgroupList.push(response);
-    }
-    return this.publisherResponseTranslation(adgroupList, marinAdgroups, 'adgroups');
+    const response = await this.deleteObjects('adgroups', access_token, accountId, "objId")
+    return this.publisherResponseTranslation(response, marinAdgroups, 'adgroups');
   }
 
   /**
@@ -182,26 +115,22 @@ export class PublisherApiService {
    * @param { MarinSingleObj[] } marinKeywords
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async deleteKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
-    let keywordResponseList = []
-    for (let index=0; index < publisherKeywords.length; index++){
-      const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === publisherKeywords[index].adGroupId;
-      });
-      let response;
-      try{
-        response = await this.deleteObjects('keywords', access_token, accountId, adgroupObj.campaignId, adgroupObj.id, publisherKeywords[index].id)
-        response['data'] = publisherKeywords[index];
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      keywordResponseList.push(response)
-    }
-    
-    return this.publisherResponseTranslation(keywordResponseList, marinKeywords, 'keywords');
+  async deleteKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], accountId:number, access_token:string) {
+    const response = await this.deleteObjects('keywords', access_token, accountId, "publisherKeywords.ObjId")
+    return this.publisherResponseTranslation(response, marinKeywords, 'keywords');
   }
 
   publisherResponseTranslation(publisherResponse, marinCampaign: MarinSingleObj[], responseType: string): MarinResponse | MarinFailedResponse {
+    /*
+      Example: 1
+      we are creating 2 campaigns, 1 campaign successfully creates and 1 gets fail we will send back in our response PARTIAL-SUCCESS
+
+      Example: 2
+      we are creating 2 campaigns, 2 campaign successfully creates and 0 gets fail we will send back in our response SUCCESS
+
+      Example: 3
+      we are creating 2 campaigns, 0 campaign successfully creates and 2 gets fail we will send back in our response Error
+    */
     const final: MarinResponse = { requestResult: '', objects: [] };
     let status = '';
     for (let i = 0; i < publisherResponse.length; i++) {
@@ -311,47 +240,15 @@ export class PublisherApiService {
    */
   async getPublisherAdGroups(advertiserId : number, access_token: string, campaignId?: string, offset?:number){
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}campaigns/${campaignId}/adgroups?offset=${offset}&limit=${environment.limit}`,
+      baseURL: `${this.apiUrl}/adroups`,
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${advertiserId}`,
       },
     }
-    try {
-      const response = await this.makeHttpCall(options);
-      return response;
-    } catch(error){
-      return {
-        "data": []
-      }
-    }
-  }
-
-  /**
-   * Gets all ad groups in the Publisher Account
-   * @return {Promise<PublisherAdGroup[]>}
-   * @param advertiserId
-   * @param campaignId
-   * @param adGroupId
-   */
-  getAdGroups(advertiserId : number, campaignId? : number, adGroupId? : number): Observable<PublishersAdGroup[]> {
-    /*TODO Need to add filtering Feature*/
-    const options: AxiosRequestConfig = {
-      baseURL: this.apiUrl + 'adGroups',
-      method: 'GET',
-      headers: {},
-      params: {}
-    }
-    options.params['advertiserId'] = advertiserId;
-    if (campaignId != undefined) {
-      options.params['campaignId'] = campaignId;
-    }
-    if (adGroupId != undefined) {
-      options.params['adGroupId'] = adGroupId;
-    }
-    return this.makeApiCall(options);
+    const response = await this.makeHttpCall(options);
+    return response;
   }
 
 
@@ -361,23 +258,18 @@ export class PublisherApiService {
    * @param advertiserId
    * @param campaignId
    */
-  async getPublisherKeywords(advertiserId : number, access_token: string, campaignId: string, adgroupId: string, offset:number){
+  async getPublisherKeywords(advertiserId : number, access_token: string, campaignId?: string, adgroupId?: string, offset?:number){
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}campaigns/${campaignId}/adgroups/${adgroupId}/targetingkeywords?offset=${offset}&limit=${environment.limit}`,
+      baseURL: `${this.apiUrl}/keywords?offset=${offset}&limit=${environment.limit}`,
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${advertiserId}`,
       },
     }
-    try {
-      const response = await this.makeHttpCall(options);
-      return response;
-    } catch(error){
-      return {"data": []}
-      // throw new HttpException(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    const response = await this.makeHttpCall(options);
+    return response;
+
   }
 
 
@@ -388,18 +280,8 @@ export class PublisherApiService {
    * @param marinAdGroup
    */
   async createAdGroups(adGroups: PublisherAdGroup[], marinAdGroup: MarinSingleObj[], accountId:number, access_token: string) {
-    let publisherResponseList = []
-    for (let index = 0 ; index < adGroups.length; index++){
-      let response:any;
-      try{
-        response = await this.createObjects('adgroups', adGroups[index], accountId, access_token, adGroups[index].campaignId)
-      }catch(e){
-        console.log("createAdGroups groups>>>>",e.error);
-        response = { data: null, pagination: null, error: { errors: e } }
-      }
-      publisherResponseList.push(response);
-    }
-    return this.publisherResponseTranslation(publisherResponseList, marinAdGroup, 'adgroups');
+    const response = await this.createObjects('adgroups', adGroups, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinAdGroup, 'adgroups');
   }
 
   /**
@@ -408,19 +290,8 @@ export class PublisherApiService {
    * @param marinAdGroup
    */
   async editAdGroups(adGroups: PublisherAdGroup[], marinAdGroup: MarinSingleObj[], accountId: number, access_token: string) {
-    let publisherResponseList = []
-    for (let index = 0 ; index < adGroups.length; index++){
-      let response;
-      try{
-        response = await this.editPublisherObjects('adgroups', adGroups[index], accountId, access_token, adGroups[index].campaignId, adGroups[index].id)
-      }catch(e){
-        console.log("editAdGroups groups>>>>",e.error);
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      publisherResponseList.push(response);
-    }
-    
-    return this.publisherResponseTranslation(publisherResponseList, marinAdGroup, 'adgroups');
+    const response = await this.editPublisherObjects('adgroups', adGroups, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinAdGroup, 'adgroups');
   }
 
   /**
@@ -429,21 +300,9 @@ export class PublisherApiService {
    * @param { MarinSingleObj[] } marinKeywords
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async createKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
-    let keywordResponseList = []
-    for (let index=0; index < publisherKeywords.length; index++){
-      const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === publisherKeywords[index].adGroupId;
-      });
-      let response;
-      try{
-        response = await this.createObjects('keywords', publisherKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.message } }
-      }
-      keywordResponseList.push(response)
-    }
-    return this.publisherResponseTranslation(keywordResponseList, marinKeywords, 'keywords');
+  async createKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], accountId:number, access_token:string) {
+    const response = await this.createObjects('keywords', publisherKeywords, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinKeywords, 'keywords');
   }
 
   /**
@@ -453,27 +312,14 @@ export class PublisherApiService {
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
   async editKeywords(publisherKeywords: PublisherKeyword[], marinKeywords: MarinSingleObj[], publisherAdgroupResponse:any[], accountId:number, access_token:string) {
-    let keywordResponseList = []
-    for (let index=0; index < publisherKeywords.length; index++){
-      const adgroupObj = publisherAdgroupResponse.find((obj) => {
-        return obj.id === publisherKeywords[index].adGroupId;
-      });
-      let response;
-      try{
-        response = await this.editPublisherObjects('keywords', publisherKeywords[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.error } }
-      }
-      keywordResponseList.push(response)
-    }
-    
-    return this.publisherResponseTranslation(keywordResponseList, marinKeywords, 'keywords');
+    const response = await this.editPublisherObjects('keywords', publisherKeywords, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinKeywords, 'keywords');
   }
 
 
-  async getPublisherAdItems(advertiserId : number, access_token: string, campaignId : string, adGroupId : string, offset: number){
+  async getPublisherAdItems(advertiserId : number, access_token: string, campaignId? : string, adGroupId? : string, offset?: number){
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}campaigns/${campaignId}/adgroups/${adGroupId}/ads?offset=${offset}&limit=${environment.limit}`,
+      baseURL: `${this.apiUrl}/ads?limit=${environment.limit}`,
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
@@ -481,13 +327,9 @@ export class PublisherApiService {
         "X-AP-Context": `orgId=${advertiserId}`,
       },
     }
-    try {
-      const response = await this.makeHttpCall(options);
-      return response;
-    } catch(error){
-      console.log("error", error);
-      return {"data": []};
-    }
+    const response = await this.makeHttpCall(options);
+    return response;
+
   }
 
 
@@ -516,77 +358,6 @@ export class PublisherApiService {
     return adList
 
   }
-  getAdItems(filter?: object, publisherCampaigns?: PublisherCampaign[]) {
-    const observableList = publisherCampaigns.map((data: PublisherCampaign) => {
-      if(data.id) {
-        const options: AxiosRequestConfig = {
-          baseURL: this.apiUrl + 'adItems',
-          method: 'GET',
-          headers: {},
-          params: {'campaignId': data.id}
-        };
-        console.log("get ad items for campaign ", data.id);
-        execSync('sleep 0.1');
-        return this.makeApiCall(options);
-      }
-    });
-    return forkJoin(observableList).pipe(map(adItems => transformPublisherAdItems(adItems.flat(1))));
-  }
-
-  getBrandProfileItems(filter?: object, publisherAdgroups?: PublishersAdGroup[]) {
-    const observableList = publisherAdgroups.map((data: PublishersAdGroup) => {
-      if(data.campaignId) {
-        const options: AxiosRequestConfig = {
-          baseURL: this.apiUrlv2 + 'sba_profile',
-          method: 'GET',
-          headers: {},
-          params: { 'campaignId': data.campaignId, 'adGroupId': data.id }
-        };
-        return this.makeApiCall(options);
-      }
-    });
-    return forkJoin(observableList).pipe(map(adItems => transformPublisherAdItems(adItems.flat(1))));
-  }
-
-
-  /**
-   * Gets all ad groups in the Publisher Account
-   * @return {Promise<PublisherAdGroup[]>}
-   * @param campaignId
-   */
-  getAdItem(campaignId : number): Observable<PublisherAdItem[]> {
-    /**
-     * TODO Need to add filtering Feature
-     */
-    const options: AxiosRequestConfig = {
-      baseURL: this.apiUrl + 'adItems',
-      method: 'GET',
-      headers: {},
-      params: {}
-    }
-    options.params['campaignId'] = campaignId;
-
-    return this.makeApiCall(options);
-  }
-
-  /**
-   * Gets all ad groups in the Publisher Account
-   * @return {Promise<PublisherAdGroup[]>}
-   * @param campaignId
-   */
-  getSbaProfileItem(campaignId : number, adgroupId : number): Observable<PublisherAdItem[]> {
-    /**
-     * TODO Need to add filtering Feature
-     */
-    const options: AxiosRequestConfig = {
-      baseURL: this.apiUrlv2 + 'sba_profile',
-      method: 'GET',
-      headers: {},
-      params: {'campaignId':campaignId, 'adGroupId':adgroupId}
-    }
-
-    return this.makeApiCall(options);
-  }
 
   /**
    * Create AdItems
@@ -594,22 +365,9 @@ export class PublisherApiService {
    * @param adItems
    * @param marinAdItem
    */
-  async createAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList:any[], accountId:number, access_token:string) {
-    
-    let AdItemResponseList = []
-    for (let index=0; index < adItems.length; index++){
-      const adgroupObj = publisherAdgroupList.find((obj) => {
-        return obj.id == adItems[index].adGroupId;
-      });
-      let response;
-      try{
-        response = await this.createObjects('adItems', adItems[index], accountId, access_token, adgroupObj.campaignId, adgroupObj.id)
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.message } }
-      }
-      AdItemResponseList.push(response)
-    }
-    return this.publisherResponseTranslation(AdItemResponseList, marinAdItem, 'adItems');
+  async createAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], accountId:number, access_token:string) {
+    const response = await this.createObjects('adItems', adItems, accountId, access_token)
+    return this.publisherResponseTranslation(response, marinAdItem, 'adItems');
   }
 
   /**
@@ -618,21 +376,9 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinAdItem
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-  async editAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
-    let AdItemResponseList = []
-    for (let index=0; index < adItems.length; index++){
-      const adgroupObj = publisherAdgroupList.find((obj) => {
-        return obj.id == adItems[index].adGroupId;
-      });
-      let response;
-      try{
-        response = await this.editPublisherObjects('adItems', adItems[index], accountId, token, adgroupObj.campaignId, adgroupObj.id, adItems[index].id)
-      }catch(e){
-        response = { data: null, pagination: null, error: { errors: e.message } }
-      }
-      AdItemResponseList.push(response)
-    }
-    return this.publisherResponseTranslation(AdItemResponseList, marinAdItem, 'adItems');
+  async editAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], accountId: number, token: string) {
+    const response = await this.editPublisherObjects('adItems', adItems, accountId, token)
+    return this.publisherResponseTranslation(response, marinAdItem, 'adItems');
   }
 
     /**
@@ -641,22 +387,9 @@ export class PublisherApiService {
    * @param {MarinSingleObj[]} marinAdItem
    * @return  { Observable<MarinResponse | MarinFailedResponse>} Response
    */
-    async deleteAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], publisherAdgroupList, accountId: number, token: string) {
-      let AdItemResponseList = []
-      for (let index=0; index < adItems.length; index++){
-        const adgroupObj = publisherAdgroupList.find((obj) => {
-          return obj.id == adItems[index].adGroupId;
-        });
-        let response;
-        try{
-          response = await this.deleteObjects('adItems', token, accountId, adgroupObj.campaignId, adgroupObj.id, adItems[index].id)
-          response['data'] = adItems[index]
-        }catch(e){
-          response = { data: null, pagination: null, error: { errors: e.message } }
-        }
-        AdItemResponseList.push(response)
-      }
-      return this.publisherResponseTranslation(AdItemResponseList, marinAdItem, 'adItems');
+    async deleteAdItem(adItems: PublisherAdItem[], marinAdItem: MarinSingleObj[], accountId: number, token: string) {
+      const response = await this.deleteObjects('adItems', token, accountId, "objId")
+      return this.publisherResponseTranslation(response, marinAdItem, 'adItems');
     }
     
   getItemSearch(itemSearchRequest) {
@@ -667,7 +400,7 @@ export class PublisherApiService {
       params: {},
       data: itemSearchRequest
     }
-    return this.makeApiCall(options);
+    return this.makeHttpCall(options);
   }
 
 
@@ -703,7 +436,6 @@ export class PublisherApiService {
       const response = await this.makeHttpCall(options);
       return response;
     } catch(error){
-      // console.log(`${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
       return []
     }
   }
@@ -751,30 +483,15 @@ export class PublisherApiService {
    * @param {any[]} objects
    */
   async createObjects(objectType:string, objects, accountId, access_token, campaignId?, adgroupId?) {
+    // Add Remaining publisher http request settings if needed
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}`,
+      baseURL: `${this.apiUrl}/${objectType}`,
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${accountId}`,
       },
       data: objects
-    }
-    switch (objectType){
-      case "campaigns":
-        options.baseURL = options.baseURL + objectType;
-        break;
-      case "adgroups":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/${objectType}`;
-        break;
-      case "keywords":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/targetingkeywords/bulk`;
-        options.data = [objects];
-        break;
-      case "adItems":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/ads`;
-        break;
     }
     const response = await this.makeHttpCall(options);
     return response;
@@ -787,77 +504,16 @@ export class PublisherApiService {
    */
   async editPublisherObjects(objectType: string, objects, accountId, access_token, campaignId?, adgroupId?, adId?) {
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}`,
+      baseURL: `${this.apiUrl}/${objectType}`,
       method: 'PUT',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${accountId}`,
       },
       data: objects
     }
-    switch (objectType){
-      case "campaigns":
-        options.baseURL = options.baseURL + objectType + `/${campaignId}`;
-        delete objects.id;
-        options.data = {"campaign": objects};
-        break;
-      case "adgroups":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/${objectType}/${adgroupId}`;
-        delete objects.id;
-        delete objects.campaignId;
-        options.data = objects
-        break;
-      case "keywords":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/targetingkeywords/bulk`;
-        options.data = [objects];
-        break;
-        case "adItems":
-          options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/ads/${adId}`;
-          break;
-    }
-    console.log("options", options)
     const response = await this.makeHttpCall(options);
     return response;
-  }
-
-
-
-  /**
-   * Edits objects
-   * @param objectType
-   * @param {any[]} objects
-   */
-  editObjects(objectType: string, objects) {
-    const endpoint = objectType == 'sba_profile'? objectType : objectType + 's';
-    if (Array.isArray(objects) && objects.length > 0) {
-      if (endpoint.includes("campaign")){
-        let batch_list = []
-        for (let index=0; index < objects.length; index+=environment.batchLimit){
-          batch_list.push(objects.slice(index, index+environment.batchLimit))
-        }
-        const observableList = batch_list.map((data: PublisherCampaign[]) => {
-            const options: AxiosRequestConfig = {
-              baseURL: this.apiUrl + endpoint,
-              method: 'POST',
-              data: data,
-              headers: {},
-              params: {}
-            };
-            return this.makeApiCall(options);
-        });
-        return forkJoin(observableList).pipe(map(response => response.flat()));
-      } else {
-        const options: AxiosRequestConfig = {
-          method: 'PUT',
-          baseURL: objectType == 'sba_profile'? this.apiUrlv2 + endpoint : this.apiUrl + endpoint,
-          data: objects,
-          headers: {},
-          params: {}
-        }
-        return this.makeApiCall(options);
-      }
-    }
   }
 
   /**
@@ -865,31 +521,15 @@ export class PublisherApiService {
    * @param objectType
    * @param {any[]} objects
    */
-  async deleteObjects(objectType: string, access_token, accountId, campaignId, adgroupId?, keywordId?, adId?) {
+  async deleteObjects(objectType: string, access_token: string, accountId, Id?) {
     const options: AxiosRequestConfig = {
-      baseURL: `${this.apiUrl}`,
+      baseURL: `${this.apiUrl}/${accountId}/${objectType}/${Id}`,
       method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`,
-        "X-AP-Context": `orgId=${accountId}`,
       }
     }
-    switch (objectType){
-      case "campaigns":
-        options.baseURL = options.baseURL + objectType + `/${campaignId}`;
-        break;
-      case "adgroups":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/${objectType}/${adgroupId}`;
-        break;
-      case "keywords":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/targetingkeywords/${keywordId}`;
-        break;
-      case "adItems":
-        options.baseURL = `${options.baseURL}campaigns/${campaignId}/adgroups/${adgroupId}/ads/${adId}`;
-        break;
-    }
-    console.log("options", options)
     const response = await this.makeHttpCall(options);
     return response;
   }
@@ -905,19 +545,7 @@ export class PublisherApiService {
       headers: {},
       params: {}
     }
-    return this.makeApiCall(options);
-  }
-
-  getOptions(options:any){
-    const token_time_stamp_seconds = this.authSignature.timestamp/1000;
-    const current_time_stamp_seconds = Math.round(+new Date()/1000) - 295 ;
-    if (current_time_stamp_seconds > token_time_stamp_seconds)
-    {
-      this.authSignature = this.generateAuthSignature();
-      options.headers['wm_consumer.intimestamp'] = this.authSignature.timestamp;
-      options.headers['wm_sec.auth_signature'] = this.authSignature.signature;
-    }
-    return options
+    return this.makeHttpCall(options);
   }
 
   valueToString (value: any) {
@@ -942,70 +570,6 @@ export class PublisherApiService {
           }
         });
     })
-  }
-
-
-
-  makeApiCall(options: AxiosRequestConfig): Observable<any> {
-    if (!this.authSignature) {
-      this.authSignature = this.generateAuthSignature();
-    }
-    options.headers = {
-      'wm_consumer.id' : config.CONSUMER_ID,
-      'wm_sec.key_version' : '1',
-      'wm_consumer.intimestamp' : this.authSignature.timestamp,
-      'wm_sec.auth_signature' : this.authSignature.signature
-    }
-    options.params['auth_token'] = config.AUTH_TOKEN;
-
-    return this.httpService.request(this.getOptions(options)).pipe(
-      tap(() => {
-        console.log('HTTP request invoked ...', this.getOptions(options));
-      }),
-      map(val => {
-        if (val.status >= 400) {
-          this.authSignature = this.generateAuthSignature();
-          throw new HttpException(`Received status ${val.status} from HTTP call`, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return val.data;
-      }),
-      retry(5),
-      catchError(err => {
-        console.log("err--->", err);
-        const data = {'type': 'Error', 'details': err.response.statusText}
-        if (err.response.status == 404){
-          return [null];
-        }
-        else if (err.response.status == 429){
-          data.details = 'Api operations limit breached for 60 Minutes interval';
-          this.sendEmailInstance.sendEmail({
-            toEmail: [config.LIMIT_BREACHED_EMAIL_TO],
-            subject: 'Publisher API Operations Limit Breached ❌',
-            textBody: `server ${err.message}. ${data.details}`,
-          });
-        }
-        throw new HttpException(data, HttpStatus.INTERNAL_SERVER_ERROR);
-      }),
-    );
-
-  }
-
-  /**
-   * generate Publisher auth signature
-   * @private
-   * @return {object} auth signature
-   */
-  generateAuthSignature() {
-    const unix = Math.round(+new Date()/1000) * 1000;
-    const data = config.CONSUMER_ID + '\n' + unix.toString() + '\n' + '1' + '\n';
-    const signer = crypto.createSign('RSA-SHA256').update(data);
-    return {
-      timestamp: unix,
-      signature: signer.sign(
-         config.API_URL.includes('stg.publisher') ? environment.privateKey :  environment.privateKeyPoduction,
-        'base64'
-      )
-    };
   }
 
 }

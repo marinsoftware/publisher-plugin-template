@@ -28,11 +28,8 @@ export class PublisherUtil {
     };
     const axios_config = {
       method: 'post',
-      url: this.baseUrl + "auth/oauth2/token",
+      url: this.baseUrl,
       data: qs.stringify(postData),
-      // headers: {
-      //   "Content-Type": "application/x-www-form-urlencoded",
-      // },
     };
     const response: any = await remote_post(axios_config);
     return JSON.parse(response);
