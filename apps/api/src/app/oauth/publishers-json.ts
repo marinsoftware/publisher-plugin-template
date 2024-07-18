@@ -3,10 +3,10 @@ import { IPublisher } from "../oauth/interfaces/publisher.interface";
 export const PublisherListJson = [
   {
     "publisher": "PUBGATEWAY",
-    "publisherDefinition": "APPLE_PUBGATEWAY",
+    "publisherDefinition": "{Publisher Name}",
     "authenticationType": "OAUTH2",
-    "publisherId": 15, 
-    "publisherDefinitionId": 137,
+    "publisherId": 15, // For Publiusher atewway support 
+    "publisherDefinitionId": 137, // Db Entry Id
     "linkingParamValList": [
       {
         'fieldName': 'accountName',

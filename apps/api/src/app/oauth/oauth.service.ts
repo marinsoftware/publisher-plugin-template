@@ -1,6 +1,5 @@
 import { Injectable, Inject, Logger, HttpException, HttpStatus, Res } from '@nestjs/common';
 import { PublisherListJson } from './publishers-json';
-import { SrePublisherListJson } from './sre-publisher-json';
 import { Publisher } from './entities/publisher.entitie';
 import {CreateOAuthUrlDto, PublisherAccountsDto} from './interfaces/oauth.dto'
 import {PublisherUtil} from './utils/publisher_utils'
