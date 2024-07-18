@@ -1,18 +1,18 @@
-# Starting point
-There is a sample application within the apps directory called `api`, this can remain as it is. However, you may use it in action by running `nx serve api`.
-To create a new NestJS application, please run `nx g @nrwl/nest:app my-new-app`; this will scaffold a new application within the apps directory. Then change the values in the `nx.json`, `pm2.json` `package.json` and `pom.xml` to reflect the application's name and the project/workspace name. Then run `nx serve nmy-new-app` or `npm run start-dev` to see the application generated in action.
-## Node Swagger - NX Workspace
-NX workspace is a build system influenced explicitly by the Angular CLI to create large applications. We are using it here because we can easily add new applications into the workspace enabling better code sharing between applications. Using the `NX Console` vscode plugin, the Nest CLI can easily be clicked through for a better dev experience.
+
+
+# Node Swagger - NX Workspace
+
+NX workspace is a build system specifically influenced by the Angular CLI to create large applications. 
 
 ## Swagger
-Utilising the OpenApi specification, we can have easy-to-follow documentation with examples to create interfaces to consume api's much more quickly. Furthermore, using the URL end-point, we can generate frontend services in Angular to communicate with the backend code using generators instead of manually managing the frontend services. This automation reduces development time significantly.
+Utilising the OpenApi specification, we can create generated code from the backend api to use on the frontend. 
 
 ## NestJS
 
-Nest JS is a MVC NodeJS framework influenced by Angular. Therefore it has a powerful CLI and loosely coupled component architecture to create high-quality typescript applications. The NX workspace fully supports NestJS and the CLI commands are integrated to speed up development.
+Nest JS is a MVC NodeJS framework influced by Angular, therefore it has a powerful CLI and loosely coupled component archtecture to create high quality typescript applications. The NX workspace fully supports NestJS and the CLI commands are integrated to speed up development. 
 
-http://localhost:3000/api is hosting the swagger ui
-http://localhost:3000/api-json has the Swagger JSON consumed by the openapi-generator to generate the generated code.
+http://localhost:3333/api is hosting the swagger ui
+http://localhost:3333/api-json has the Swagger Json that is consumed by the openapi-generator to generate the generated code.
 
 ## Development server
 
@@ -27,13 +27,6 @@ Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new
 Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
-
-Add publisher service repo name in suitname in package.json file for jest
-example
-"jest-junit": {
-    "suiteName": "marin-amazon-api-pg-service",
-   ...
-  },
 
 Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
 
@@ -56,35 +49,177 @@ Visit the [Nx Documentation](https://nx.dev) to learn more.
 - 'Jest Runner' for testing
 
 
-# Health Check
-## Route
-GET /admin/status/{package.name}/{level}
+### Logging 
+https://github.com/vanthome/winston-elasticsearch
+https://github.com/gremo/nest-winston
 
-The route is automatically generated from the name defined in `package.json`, this means that the developer is not required to modify this and it will just work.
 
-## Service Checks
-L1 service checks are performed by the request controller in `health.controller.ts`.
 
-L2 service checks are performed on any service that register with `HealthCheckFactory`, an injectable service. To be able to register with the `HealthCheckFactory`, the service must implement the interface `IHealthCheckService`. To register with the `HealthCheckFactory` use the decorator `HealthCheckService`. An example of this can be seen in the `CatService`.
+Install the dependencies:
 
-## Examples
-### Using HealthCheckFactory
-To register your service as a health check service, you first must implement `IHealthCheckService`. Once that is done, inject `HealthCheckFactory` into your constructor and call `registerService` from your constructor.
-
+```bash
+npm install
 ```
-class CatService implements IHealthCheckService {
-  constructor(private factory: HealthCheckFactory) {
-    factory.registerService(this);
-  }
-  ...
+
+# open .tsconfig and modify the typescript settings variables (if needed)
+
+Running locally:
+
+```bash
+npm run build
+npm run start-dev
+```
+
+Running in production:
+
+```bash
+npm run build
+npm start
+```
+
+Testing:
+
+```bash
+# run all tests
+npm run test
+```
+
+
+## Environment Variables
+
+use env.properties inside conf folder at the root of the project, you can add your variables there along with there default values:
+
+```bash
+# Port number
+PORT=3333
+
+# To set the publisher social Auth settings. To create new publisher app go to section below TABOOLA APP SETUP
+AUTH_BASE_URL="PUBLISHER AUTH URL"
+ADS_BASE_URL="publisher API BASE URL"
+REDIRECT_URI="REDIRECT URL TO YOUR CLIENT PORTAL"
+APP_ID="PUBLISHER APP ID"
+SECRET_ADS="PUBLISHER APP SECRET"
+HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
+```
+
+### API Endpoints
+
+List of available routes:
+
+**Publisher routes**:\
+`GET /api/publishers` - get list of all publisher\
+`POST /api/oauth` - get oauth url against publisher details provided in req body\
+`POST /api/publisherAccounts` - get accounts against publisher details provided in req body\
+`GET /api/campaigns` - Get All Campaigns\
+`GET /api/groups` - Get All Groups\
+`GET /api/ads` - Get All Ads\
+`GET /api/keywords` - Get All Keywords\
+`GET /api/properties` - Verify if shopping products are available\
+`GET /api/reporting/public/v1.0/report` - Get snapshot\
+`PUT /api/campaigns` - Edit Campaigns\
+`PUT /api/groups` - Edit Groups\
+`PUT /api/ads` - Edit Ads
+
+**Health routes**:\
+`GET /admin/status/marin-taboola-api-service/L1` - check health of this microservice\
+`GET /admin/status/marin-taboola-api-service/L2` - check health of third party api's\
+`GET /admin/status/marin-taboola-api-service` - check health of third party api's and this microservice\
+
+## TABOOLA APP SETUP
+
+Create a Taboola app by following guidance
+1. Log into www.taboola.com with the account that you’ll use to manage your apps
+2. Go to My Apps
+3. Select Connect app and complete our request form with your app information
+4. Submit your request to get Trial access
+
+For More Details follow the guidance url to setup developer app
+    https://developers.taboola.com/docs/getting-started/set-up-app/#operation/terms_of_service/get
+
+After Creating your app you can see your app under My apps
+    ![Developer App](https://decodermind.com/static/img/taboola.png)
+
+1. Click on your app and get APP_Id, APP_SECRET and other information.
+2. Save these in .env file. (These env variable will be available across all app, Developer needs to import these var in config file and use them to communicate with taboola Api)
+3. Redirect Url in app indicates where should taboola api send response against client cridentials provided in request for oauth2 process
+
+## API Handling
+
+`GET /publishers` - get list of all publisher\
+
+> Open your /src/config/publisher.json
+> Add a publisher you want to interact with for example
+> [
+> {
+
+    "publisher": "GENERIC",
+    "publisherDefinition": "TABOOLA",
+    "authenticationType": "OAUTH2",
+    "linkingParamValList": [
+      {
+        "fieldName": "accountName",
+        "fieldValueType": "String",
+        "localizedText": "Account Name",
+        "localizedTextKey": "ACCOUNT_NAME_LABEL",
+        "required": false
+      },
+      {
+        "fieldName": "accountId",
+        "fieldValueType": "String",
+        "localizedText": "Account Id",
+        "localizedTextKey": "ACCOUNT_ID",
+        "required": true
+      }
+    ]
+
 }
-```
+]
 
-## Using HealthCheckService decorator
-To automate the registring of your service as a health check service, you add the decorator at the class level. This decorator will automatically register your class instance with `HealthCheckFactory`.
-```
-@HealthCheckService()
-class CatService implements IHealthCheckService {
-  ...
-}
-```
+- publisherDefinition : PUBLISHER NAME
+- authenticationType: AUTH TYPE
+- linkingParamValList: List of attribute that we need to ask user from frontend, so we can search the account based upon those information
+
+Once above publisher is added in json file, your first API will start giving you response
+
+`POST /oauth` - get oauth url against publisher details provided in req body\
+Once you have setup your .env file as per the directions given in Environment Variables section. This endpoint will start giving you required auth URL.
+
+URL PARAMS
+    1. scope: In taboola we need to provide scope variable in url param. This is a comma delimited list of scope names covering the specific data and/or functions you want to access for this user. You must request access to at least one scope.
+    2. client_id: This is the unique ID for your app also referred to as App ID.
+    3. redirect_uri: This must be one of the redirect URIs registered on your app. The value of this parameter must exactly  match the registered value.
+    4. response_type: Set this value to the literal string code
+    5. state(optional): This parameter can be any string value defined by you.
+
+`POST /publisherAccounts` - get accounts against publisher details provided in req body\
+To return token and account details, you need to customized the controller, as you need to interact with publisher interal API
+
+## API AUTH CURL REQUESTS
+
+  # Request 1
+  # List all active Publisher
+  curl -X 'GET' 'http://localhost:3333/publishers' -H 'accept: application/json'
+  ​
+  ​
+  # Request 2
+  # Retrieve encoded auth URL for valid publisher
+  curl -X 'POST' 'http://localhost:3333/oauth' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{ "state": "Unknown Type: Any", "publisher": "TABOOLA", "clientID": "any", "redirect_uri": "https://cloudfunc15-frontend-101.aws.marinsw.net/transientPage"}'
+  ​
+  ​
+  ​
+  # Request 3
+  # use auth_code or code value comes back from auth url after authorization in code key under request body
+  # Retrieve publisher Accounts
+  curl -X 'POST' \
+    'http://localhost:3333/publisherAccounts' \
+    -H 'accept: application/json' \
+    -H 'Content-Type: application/json' \
+    -d '{
+    "responseUrl": "https://marin.com",
+    "publisher": "TABOOLA",
+    "redirect_uri": `redirect_uri`,
+    "accountID": `accountID`,
+    "accountName": `accountName`,
+    "clientID": `clientID`,
+    "code": `code`
+  }'
