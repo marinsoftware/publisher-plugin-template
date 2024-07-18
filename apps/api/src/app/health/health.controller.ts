@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HealthService } from './health.service';
 
-
-@Controller('admin/status/repo-name')
+// e.g admin/status/{service-name}
+@Controller('admin/status/marin-pinterest-api-service')
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
 
