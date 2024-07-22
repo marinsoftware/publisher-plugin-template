@@ -66,9 +66,9 @@ ADS_BASE_URL="publisher API BASE URL"
 HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
 ```
 
-## Marin recommends url versioning
+## Versioning
 
-- URL versioning is an approach to API versioning where the version number is included in the URL itself. Typically, the version number is appended to the base URL of the API, separated by a forward slash.
+- We recommend URL versioning is an approach for API's where the version number is included in the URL itself.
   eg:
   - `v1.0/publishers`
   - `v1.1/publishers`
