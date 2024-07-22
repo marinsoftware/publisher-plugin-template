@@ -169,6 +169,7 @@ function transformPublisherkeywords(publisherkeywords, accountId: number) : Mari
       marinKeywords.push(marinKeyword);
     })
   }
+
   return marinKeywords;
 }
 

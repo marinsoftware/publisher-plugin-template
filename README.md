@@ -4,6 +4,9 @@
 
 NX workspace is a build system specifically influenced by the Angular CLI to create large applications. 
 
+## Node Version Compatibilty
+  v20.12.2
+
 ## Swagger
 Utilising the OpenApi specification, we can create generated code from the backend api to use on the frontend. 
 
@@ -60,8 +63,6 @@ Install the dependencies:
 ```bash
 npm install
 ```
-
-# open .tsconfig and modify the typescript settings variables (if needed)
 
 Running locally:
 
