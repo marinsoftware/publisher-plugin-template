@@ -13,25 +13,21 @@ Plugin gateway template between Marin & Publishers. This is a template which con
 
 ## Code scaffolding
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+- Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
 
 ## Build
 
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+- Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
 
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
+- Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+- Run `nx affected:test` to execute the unit tests affected by a change.
 
 ## Understand your workspace
 
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
+- Run `nx graph` to see a diagram of the dependencies of your projects.
+- Visit the [Nx Documentation](https://nx.dev) to learn more.
 
 ## VS Code/Cursor Plugins
 
@@ -40,7 +36,14 @@ Visit the [Nx Documentation](https://nx.dev) to learn more.
 - 'ESLint' for linting rules
 - 'Jest Runner' for testing
 
-## [Environment Variables](conf/env.properties)
+## API Endpoints
+
+- [API Linking endpoints](README-API-HANDLING.md)
+- [Eg: Taboola publisher](README-PUBLISHER-SPECIFIC.md)
+
+## Setup Environement
+
+- [Environment Variables](conf/env.properties)
 
 use env.properties inside conf folder at the root of the project, you can add your variables there along with there default values:
 
@@ -55,7 +58,7 @@ APP_ID="PUBLISHER APP ID"
 SECRET_ADS="PUBLISHER APP SECRET"
 ```
 
-## Setup [environment constants](apps/api/src/environments/environment.ts)
+- [Environment Constants](apps/api/src/environments/environment.ts)
 
 ```
 AUTH_BASE_URL="PUBLISHER AUTH URL"
@@ -63,14 +66,12 @@ ADS_BASE_URL="publisher API BASE URL"
 HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
 ```
 
-## API Endpoints
-
-- [API Linking endpoints](README-API-HANDLING.md)
-- [Eg: Taboola publisher](README-PUBLISHER-SPECIFIC.md)
-
 ## Marin recommends url versioning
 
-1. URL versioning is an approach to API versioning where the version number is included in the URL itself. Typically, the version number is appended to the base URL of the API, separated by a forward slash.
+- URL versioning is an approach to API versioning where the version number is included in the URL itself. Typically, the version number is appended to the base URL of the API, separated by a forward slash.
+  eg:
+  - `v1.0/publishers`
+  - `v1.1/publishers`
 
 ## Support
 
