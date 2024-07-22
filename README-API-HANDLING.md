@@ -1,10 +1,10 @@
-### API Endpoints
+# API Endpoints
 
 List of available routes:
 
-\***\*Linking routes**:\
+**Linking routes**:
 
-# Required Endpoints Inorder to implement this plugin
+### Required Endpoints Inorder to implement this plugin
 
 This is to initiate Oauth connection between Marin & publishers
 
@@ -12,9 +12,9 @@ This is to initiate Oauth connection between Marin & publishers
 2 `POST /api/oauth` - get oauth url against publisher details provided in req body\
 3 `POST /api/publisherAccounts` - get accounts against publisher details provided in req body\
 
-**Publisher routes**:\
+**Publisher routes**:
 
-## Inorder to extend this plugin we need to support publisher endpoints as required
+### Inorder to extend this plugin we need to support publisher endpoints as required
 
 - Tier 1 support support complete CRUD
 - Tier 2 support support GET and UPDATE Endpoints
@@ -29,9 +29,9 @@ This is to initiate Oauth connection between Marin & publishers
   `PUT /api/groups` - Edit Groups\
   `PUT /api/ads` - Edit Ads
 
-**Health routes**:\
+**Health routes**:
 
-# Required Endpoints Inorder to implement this plugin
+### Required Endpoints Inorder to implement this plugin
 
 `GET /admin/status/marin-PUBLISHER_NAME-api-service/L1` - check health of this microservice\
 `GET /admin/status/marin-PUBLISHER_NAME-api-service/L2` - check health of third party api's\
@@ -39,11 +39,11 @@ This is to initiate Oauth connection between Marin & publishers
 
 **Snapshot routes**:
 
-# Inorder to extend this plugin we need to support publisher reporting endpoints as required
+### Inorder to extend this plugin we need to support publisher reporting endpoints as required
 
 `GET /api/reporting/public/v1.0/report?accountId=***&publisherId=141&startDate=2024-04-13&endDate=2024-07-14&refreshToken=**-A&reportType=group` - implement cost rev to fetch reporting data from publisher\
 
-**Swagger Doc**:\
-- Endpoints with summary "Required*"  must be extended
-# Doc Link
-http://localhost:3333/api/#/docs
+**Swagger Doc**:
+
+- Start the service
+- Access: http://localhost:3333/api/#/docs
