@@ -77,7 +77,7 @@ export class HealthService {
   }
 
   public healthCheckL3(){
-    return {"marin-amazon-api-pg-service" : {"L3" : {}}}
+    return {"marin-{Publisher_Name}-api-service" : {"L3" : {}}}
   }
 
   public async healthCheck() {  
@@ -88,7 +88,7 @@ export class HealthService {
       [this.publisherKey]: {
         'L1': responseL1[this.publisherKey]['L1'],
         'L2': responseL2[this.publisherKey]['L2'],
-        'L3': responseL3['marin-amazon-api-pg-service']['L3']
+        'L3': responseL3['marin-{Publisher_Name}-api-service']['L3']
       }
     }
     return response;

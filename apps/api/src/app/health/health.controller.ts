@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HealthService } from './health.service';
 
 // e.g admin/status/{service-name}
-@Controller('admin/status/marin-pinterest-api-service')
+@Controller('admin/status/marin-{Publisher_Name}-api-service')
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
 
@@ -38,6 +38,7 @@ export class HealthController {
 
   })
   healthCheckL1() {
+    console.log("helllooo", "helllooo");
     return this.healthService.healthCheckL1();
   }
 

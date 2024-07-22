@@ -138,3 +138,8 @@ Third endpoint is to have the refresh token.
   # UPDATE Api versions before sunset inorder to support publishers
   1. Api versioning for publisher will be added within template to communicate with publishers api.
   2. Use latest api versions to communicate with publishers
+
+
+## Unit Test Cases
+  1. For each app write unit test cases
+  2. Atleast 80% test coverage is recommended
