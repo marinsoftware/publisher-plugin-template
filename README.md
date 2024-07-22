@@ -55,7 +55,7 @@ APP_ID="PUBLISHER APP ID"
 SECRET_ADS="PUBLISHER APP SECRET"
 ```
 
-# Setup environment constants environment.ts file
+## Setup environment constants environment.ts file
 
 eg:
 
@@ -65,13 +65,12 @@ ADS_BASE_URL="publisher API BASE URL"
 HEALTH_AUTH_CODE="YOUR HEALTH TOKEN ACCESS KEY"
 ```
 
-### Endpoints
+## Endpoints
 
 - [API Linking endpoints](README-API-HANDLING.md)
+- [Eg: Taboola publisher](README-PUBLISHER-SPECIFIC.md)
 
-## Marin API Versioning Guidance
-
-# Marin Api supports url versions.
+## Marin Api supports url versions.
 
 1. URL versioning is an approach to API versioning where the version number is included in the URL itself. Typically, the version number is appended to the base URL of the API, separated by a forward slash.
 2. Currently we have not indroduced versioning in marin api but in furutre if versioning introducted it will be url versioning
