@@ -11,7 +11,7 @@ export class PublishersController {
   }
 
   @Get('publishers')
-  @ApiOperation({ summary: 'Get Publishers' })
+  @ApiOperation({ summary: 'Get Publishers. Required*' })
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -23,14 +23,14 @@ export class PublishersController {
   }
 
   @Post('oauth')
-  @ApiOperation({ summary: 'Retrieve encoded auth URL for publisher' })
+  @ApiOperation({ summary: 'Retrieve encoded auth URL for publisher. Required*' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async createoauthurl(@Req() request, @Body() OAuthDto: CreateOAuthUrlDto){
     return await this.publihsersService.createoauthurl(request, OAuthDto);
   }
 
   @Post('publisherAccounts')
-  @ApiOperation({ summary: 'Retrieve publisher Accounts' })
+  @ApiOperation({ summary: 'Retrieve publisher Accounts. Required*' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async retrievepublisheraccounts(@Body() accountsDto: PublisherAccountsDto){
     this.logger.log("info", `retrievepublisheraccounts-> ${accountsDto}`);

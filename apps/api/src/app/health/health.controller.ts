@@ -9,7 +9,7 @@ export class HealthController {
 
 
   @Get()
-  @ApiOperation({summary: 'Get Call for Health Check all level'})
+  @ApiOperation({summary: 'Get Call for Health Check all level. Required*'})
   @ApiResponse({
     status: 200,
     description: 'Health Check Api'
@@ -20,7 +20,7 @@ export class HealthController {
   }
 
   @Get('')
-  @ApiOperation({summary: 'Get Call for Health Check all level'})
+  @ApiOperation({summary: 'Get Call for Health Check all level. Required*'})
   @ApiResponse({
     status: 200,
     description: 'Health Check Api'
@@ -31,19 +31,18 @@ export class HealthController {
   }
 
   @Get('/L1')
-  @ApiOperation({summary: 'Get Call for Health Check level L1'})
+  @ApiOperation({summary: 'Get Call for Health Check level L1. Required*'})
   @ApiResponse({
     status: 200,
     description: 'Health Check Api Level 1'
 
   })
   healthCheckL1() {
-    console.log("helllooo", "helllooo");
     return this.healthService.healthCheckL1();
   }
 
   @Get('/L2')
-  @ApiOperation({summary: 'Get Call for Health Check level L2'})
+  @ApiOperation({summary: 'Get Call for Health Check level L2. Required*'})
   @ApiResponse({
     status: 200,
     description: 'Health Check Api Level 2'
