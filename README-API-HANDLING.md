@@ -44,4 +44,6 @@ This is to initiate Oauth connection between Marin & publishers
 `GET /api/reporting/public/v1.0/report?accountId=***&publisherId=141&startDate=2024-04-13&endDate=2024-07-14&refreshToken=**-A&reportType=group` - implement cost rev to fetch reporting data from publisher\
 
 **Swagger Doc**:\
+- Endpoints with summary "Required*"  must be extended
+# Doc Link
 http://localhost:3333/api/#/docs
