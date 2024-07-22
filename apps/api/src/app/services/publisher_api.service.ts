@@ -24,12 +24,10 @@ const qs = require('qs');
 @Injectable()
 export class PublisherApiService {
   apiUrl: string;
-  apiUrlv2: string;
   private authSignature: { timestamp: number, signature: string }
   sendEmailInstance: any;
   constructor(private httpService: HttpService) {
     this.apiUrl = environment.ADS_BASE_URL;
-    this.apiUrlv2 = config.API_URL_V2;
     this.sendEmailInstance = sendEmail as any;
   }
 

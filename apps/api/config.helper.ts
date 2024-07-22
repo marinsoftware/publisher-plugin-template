@@ -229,7 +229,6 @@ export interface Config {
   REDIRECT_URI: string;
   SECRET_ADS: string;
   API_URL: string;
-  API_URL_V2: string;
   CONSUMER_ID: string;
   AUTH_TOKEN: string;
   VERSION: number;
