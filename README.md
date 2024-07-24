@@ -9,8 +9,7 @@ Plugin gateway template between Marin & Publishers. This is a template which con
 - `npm i`
 - Run `npm run start-dev` to start the service locally
 - Checkout API http://localhost:3333/api
-- Swagger: http://localhost:3333/api-json
-
+- Swagger: http://localhost:3333/api
 ## Code scaffolding
 
 - Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
