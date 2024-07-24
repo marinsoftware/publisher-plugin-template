@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HealthService } from './health.service';
 
 // e.g admin/status/{service-name}
-@Controller('admin/status/marin-{Publisher_Name}-api-service')
+@Controller('admin/status/marin-publisherName-api-service')
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
 
@@ -16,17 +16,6 @@ export class HealthController {
 
   })
   healthChecks() {
-    return this.healthService.healthCheck();
-  }
-
-  @Get('')
-  @ApiOperation({summary: 'Get Call for Health Check all level. Required*'})
-  @ApiResponse({
-    status: 200,
-    description: 'Health Check Api'
-
-  })
-  healthCheck() {
     return this.healthService.healthCheck();
   }
 

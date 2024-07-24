@@ -2,7 +2,7 @@
     "apps": [{
       "name": "node-swagger",
       "script": "./dist/apps/api/main.js",
-      "instances": 0,
+      "instances": 1,
       "exec_mode": "cluster_mode",
       "env": {
         "NODE_ENV": "development",

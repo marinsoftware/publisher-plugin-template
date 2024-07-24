@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "pm2 install pm2-logrotate; pm2 restart $npm_package_config_pm2config --only api --env prod",
-    "stop": "pm2 stop $npm_package_config_pm2config --only api",
-    "restart": "pm2 restart $npm_package_config_pm2config --only api",
+    "start": "pm2 install pm2-logrotate; pm2 restart $npm_package_config_pm2config --only node-swagger --env prod",
+    "stop": "pm2 stop $npm_package_config_pm2config --only node-swagger",
+    "restart": "pm2 restart $npm_package_config_pm2config --only node-swagger",
     "start-dev": "nx serve api",
     "build": "rm -rf dist/ && nx build",
     "test": "nx run-many --all --target=test --coverage --colors --reporters=jest-junit",
@@ -14,7 +14,7 @@
     "pm2-update": "pm2 update"
   },
   "jest-junit": {
-    "suiteName": "marin-publisher-pg-service",
+    "suiteName": "node-swagger",
     "outputDirectory": "./target",
     "outputName": "junit.xml",
     "uniqueOutputName": "false",
