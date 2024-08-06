@@ -28,20 +28,13 @@ HEALTH_CHECK_DEPENDENCY_PARAMS:
     objectType: ${marin-frontend-api-service.healthCheckAuditLogObjectType:-campaigns}
   JOB_MANAGER:
     jobId: ${marin-frontend-api-service.healthCheckJobManagerJobId:-101716539}
-    # TODO: Update the values when side panel service is deployed to DIT
-  SIDE_PANEL:
-    objectId: ${marin-frontend-api-service.healthCheckSidePanelObjectId:-3367337}
-    objectType: ${marin-frontend-api-service.healthCheckSidePanelObjectType:-campaigns}
-    publisherId: ${marin-frontend-api-service.healthCheckSidePanelPublisherId:-4}
-    accountId: ${marin-frontend-api-service.healthCheckSidePanelAccountId:-99860}
-
 
 SENDGRID:
-  apiUser: ${sendgrid.apiUser:-sendGridApiUser}
-  apiKey: ${sendgrid.apiKey:-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}
-  fromEmail: ${sendgrid.fromEmail:-donotreply@marinsoftware.com}
+  apiUser: ${sendgrid.apiUser:-}
+  apiKey: ${sendgrid.apiKey:-}
+  fromEmail: ${sendgrid.fromEmail:-}
 
-LIMIT_BREACHED_EMAIL_TO: ${limit-breached-email-to:-donotreply@marinsoftware.com}
+LIMIT_BREACHED_EMAIL_TO: ${limit-breached-email-to:-}
 
 API_URL: ${API_URL:-https://developer.api.stg.walmart.com/api-proxy/service/WPA/Api/v1/api/v1/}
 CONSUMER_ID: ${CONSUMER_ID:-marin-decodermind}
@@ -49,6 +42,6 @@ AUTH_TOKEN: ${AUTH_TOKEN:-marin-decodermind}
 VERSION: ${VERSION:-1}
 APP_ID: ${APP_ID:-marin-decodermind}
 SECRET_ADS: ${SECRET_ADS:-marin-decodermind}
-REDIRECT_URI: ${REDIRECT_URI:-https://marin-decodermind.net/transientPage}
-REDIRECT_URI_JUSTADS: ${REDIRECT_URI_JUSTADS:-https://marin-decodermind.net:3001/decodeOAuthUrl}
-REDIRECT_V1_URI_JUSTADS: ${REDIRECT_V1_URI_JUSTADS:-https://marin-decodermind.com:3001/api/v1/decodeOAuthUrl}
+REDIRECT_URI: ${REDIRECT_URI:-}
+REDIRECT_URI_JUSTADS: ${REDIRECT_URI_JUSTADS:-}
+REDIRECT_V1_URI_JUSTADS: ${REDIRECT_V1_URI_JUSTADS:-}
